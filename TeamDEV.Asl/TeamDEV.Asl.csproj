@@ -45,7 +45,7 @@
     <Compile Include="Internals\Native\Enumerations\FormatMessageFlags.cs" />
     <Compile Include="Internals\Native\Enumerations\MemoryInformationClass.cs" />
     <Compile Include="Internals\Native\Enumerations\MemoryProtections.cs" />
-    <Compile Include="Internals\Native\Enumerations\MemoryStates.cs" />
+    <Compile Include="Internals\Native\Enumerations\MemoryAllocationTypes.cs" />
     <Compile Include="Internals\Native\Enumerations\NTSTATUS.cs" />
     <Compile Include="Internals\Native\Enumerations\ObjectInformationClass.cs" />
     <Compile Include="Internals\Native\Enumerations\ProcessAccess.cs" />
@@ -54,10 +54,14 @@
     <Compile Include="Internals\Native\Enumerations\SystemInformationClass.cs" />
     <Compile Include="Internals\Native\Methods\Kernel32.cs" />
     <Compile Include="Internals\Native\Methods\Ntdll.cs" />
+    <Compile Include="Internals\Native\PInvokeDebugger.cs" />
+    <Compile Include="Internals\Native\PInvokeDebugInfo.cs" />
+    <Compile Include="Internals\Native\PInvokeParameters.cs" />
     <Compile Include="Internals\Native\Structures\ClientId.cs" />
     <Compile Include="Internals\Native\Structures\ModuleEntry32.cs" />
     <Compile Include="Internals\Native\Structures\ObjectAttributes.cs" />
     <Compile Include="Internals\Native\Structures\ProcessEntry32.cs" />
+    <Compile Include="Internals\Native\TraceFilters.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup />

@@ -2,7 +2,7 @@
 
 namespace TeamDEV.Asl.Internals.Native.Enumerations {
     [Flags]
-    public enum MemoryStates : uint {
+    public enum MemoryAllocationTypes : uint {
         Commit = 0x1000,
         Reserve = 0x2000,
         Decommit = 0x4000,
