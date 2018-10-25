@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 
-namespace TeamDEV.Asl.Internals.Native.Structures {
+namespace TeamDEV.Asl.PInvoke.Internals.Structures {
     [StructLayout(LayoutKind.Sequential)]
     public struct ClientId {
         public IntPtr UniqueProcess;

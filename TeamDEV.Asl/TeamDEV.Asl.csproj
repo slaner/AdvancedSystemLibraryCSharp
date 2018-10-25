@@ -20,6 +20,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -41,28 +42,35 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Class1.cs" />
-    <Compile Include="Internals\Native\Enumerations\AccessMask.cs" />
-    <Compile Include="Internals\Native\Enumerations\FormatMessageFlags.cs" />
-    <Compile Include="Internals\Native\Enumerations\MemoryInformationClass.cs" />
-    <Compile Include="Internals\Native\Enumerations\MemoryProtections.cs" />
-    <Compile Include="Internals\Native\Enumerations\MemoryAllocationTypes.cs" />
-    <Compile Include="Internals\Native\Enumerations\NTSTATUS.cs" />
-    <Compile Include="Internals\Native\Enumerations\ObjectInformationClass.cs" />
-    <Compile Include="Internals\Native\Enumerations\ProcessAccess.cs" />
-    <Compile Include="Internals\Native\Enumerations\ProcessInformationClass.cs" />
-    <Compile Include="Internals\Native\Enumerations\SnapshotFlags.cs" />
-    <Compile Include="Internals\Native\Enumerations\SystemInformationClass.cs" />
-    <Compile Include="Internals\Native\Methods\Kernel32.cs" />
-    <Compile Include="Internals\Native\Methods\Ntdll.cs" />
-    <Compile Include="Internals\Native\PInvokeDebugger.cs" />
-    <Compile Include="Internals\Native\PInvokeDebugInfo.cs" />
-    <Compile Include="Internals\Native\PInvokeParameters.cs" />
-    <Compile Include="Internals\Native\Structures\ClientId.cs" />
-    <Compile Include="Internals\Native\Structures\ModuleEntry32.cs" />
-    <Compile Include="Internals\Native\Structures\ObjectAttributes.cs" />
-    <Compile Include="Internals\Native\Structures\ProcessEntry32.cs" />
-    <Compile Include="Internals\Native\TraceFilters.cs" />
+    <Compile Include="Extensions\Numeric.cs" />
+    <Compile Include="Extensions\Pointer.cs" />
+    <Compile Include="PInvoke\Internal\Enumerations\WaitResult.cs" />
+    <Compile Include="PInvoke\ModuleManager.cs" />
+    <Compile Include="PInvoke\Internal\Enumerations\AccessMask.cs" />
+    <Compile Include="PInvoke\Internal\Enumerations\FormatMessageFlags.cs" />
+    <Compile Include="PInvoke\Internal\Enumerations\MemoryInformationClass.cs" />
+    <Compile Include="PInvoke\Internal\Enumerations\MemoryProtections.cs" />
+    <Compile Include="PInvoke\Internal\Enumerations\MemoryAllocationTypes.cs" />
+    <Compile Include="PInvoke\Internal\Enumerations\NTSTATUS.cs" />
+    <Compile Include="PInvoke\Internal\Enumerations\ObjectInformationClass.cs" />
+    <Compile Include="PInvoke\Internal\Enumerations\ProcessAccess.cs" />
+    <Compile Include="PInvoke\Internal\Enumerations\ProcessInformationClass.cs" />
+    <Compile Include="PInvoke\Internal\Enumerations\SnapshotFlags.cs" />
+    <Compile Include="PInvoke\Internal\Enumerations\SystemInformationClass.cs" />
+    <Compile Include="PInvoke\Internal\Methods\Kernel32.cs" />
+    <Compile Include="PInvoke\Internal\Methods\Ntdll.cs" />
+    <Compile Include="PInvoke\PInvokeDebugger.cs" />
+    <Compile Include="PInvoke\PInvokeDebugInfo.cs" />
+    <Compile Include="PInvoke\PInvokeParameters.cs" />
+    <Compile Include="PInvoke\Internal\Structures\ClientId.cs" />
+    <Compile Include="PInvoke\Internal\Structures\ModuleEntry32.cs" />
+    <Compile Include="PInvoke\Internal\Structures\ObjectAttributes.cs" />
+    <Compile Include="PInvoke\Internal\Structures\ProcessEntry32.cs" />
+    <Compile Include="PInvoke\PInvokeTraceEventHandler.cs" />
+    <Compile Include="PInvoke\TraceFilters.cs" />
+    <Compile Include="PInvoke\SR.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Utilities\StringUtilities.cs" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

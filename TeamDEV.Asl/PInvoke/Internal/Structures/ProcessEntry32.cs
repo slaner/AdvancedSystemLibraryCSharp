@@ -2,7 +2,7 @@
 using System;
 using System.Runtime.InteropServices;
 
-namespace TeamDEV.Asl.Internals.Native.Structures {
+namespace TeamDEV.Asl.PInvoke.Internals.Structures {
     [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Auto)]
     public struct ProcessEntry32 {
         public uint dwSize;

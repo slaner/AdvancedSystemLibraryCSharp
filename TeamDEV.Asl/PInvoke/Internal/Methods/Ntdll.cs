@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Runtime.InteropServices;
-using TeamDEV.Asl.Internals.Native.Enumerations;
-using TeamDEV.Asl.Internals.Native.Structures;
+using TeamDEV.Asl.PInvoke.Internals.Enumerations;
+using TeamDEV.Asl.PInvoke.Internals.Structures;
 
-namespace TeamDEV.Asl.Internals.Native.Methods {
+namespace TeamDEV.Asl.PInvoke.Internals.Methods {
     /// <summary>
     /// 
     /// </summary>

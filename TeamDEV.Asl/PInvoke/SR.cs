@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace TeamDEV.Asl.Internals {
+namespace TeamDEV.Asl.PInvoke {
     static class SR {
         static readonly Dictionary<string, string> resourceString = new Dictionary<string, string>();
         public static string GetString(string resName) {

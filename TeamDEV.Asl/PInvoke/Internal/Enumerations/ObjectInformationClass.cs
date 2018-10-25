@@ -1,4 +1,4 @@
-﻿namespace TeamDEV.Asl.Internals.Native.Enumerations {
+﻿namespace TeamDEV.Asl.PInvoke.Internals.Enumerations {
     public enum ObjectInformationClass {
         ObjectBasicInformation,
         ObjectNameInformation,

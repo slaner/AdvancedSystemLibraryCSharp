@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 
-namespace TeamDEV.Asl.Internals.Native {
+namespace TeamDEV.Asl.PInvoke {
     /// <summary>
     /// 
     /// </summary>

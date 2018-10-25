@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace TeamDEV.Asl.Internals.Native {
+namespace TeamDEV.Asl.PInvoke {
     /// <summary>
     /// 
     /// </summary>

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace TeamDEV.Asl.Internals.Native.Enumerations {
+namespace TeamDEV.Asl.PInvoke.Internals.Enumerations {
     [Flags]
     public enum AccessMask : uint {
         Delete = 0x10000,

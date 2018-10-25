@@ -1,4 +1,4 @@
-﻿namespace TeamDEV.Asl.Internals.Native.Enumerations {
+﻿namespace TeamDEV.Asl.PInvoke.Internals.Enumerations {
     public enum ProcessInformationClass {
         ProcessBasicInformation, // 0, q: PROCESS_BASIC_INFORMATION, PROCESS_EXTENDED_BASIC_INFORMATION
 	    ProcessQuotaLimits, // qs: QUOTA_LIMITS, QUOTA_LIMITS_EX
