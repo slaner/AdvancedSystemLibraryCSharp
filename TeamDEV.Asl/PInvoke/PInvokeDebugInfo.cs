@@ -41,7 +41,11 @@ namespace TeamDEV.Asl.PInvoke {
         /// 
         /// </summary>
         public string ErrorDescription { get; internal set; }
-        
+
+
+        internal static PInvokeDebugInfo TraceDebugInfo(string moduleName, string pinvokeName, string callerName, object returnValue, object errorReturnValue, params object[] args) {
+            return TraceDebugInfo(PInvokeDebugger.TraceFilters, moduleName, pinvokeName, callerName, returnValue, errorReturnValue, args);
+        }
         /// <summary>
         /// Trace debug information for specified PInvoke calls.
         /// </summary>
