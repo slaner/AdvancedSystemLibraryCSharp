@@ -8,12 +8,15 @@ using TeamDEV.Asl.PInvoke;
 namespace TeamDEV.Asl.Test.Console {
     class Program {
         static void Main(string[] args) {
-            PInvokeDebugger.PInvokeTraced += OnPInvokeTraced;
-            
+            PInvokeDebugger.TraceListener.Writer = System.Console.Out;
+            PInvokeDebugger.PInvokeCaptured += OnPInvokeCaptured;
+            TeamDEV.Asl.Process
+            while (true) {
+
+            }
         }
-
-        private static void OnPInvokeTraced(PInvokeDebugInfo debugInfo) {
-
+        private static void OnPInvokeCaptured(PInvokeDebugInfo debugInfo) {
+            PInvokeDebugger.TraceListener.WriteLine($"Module Name: {debugInfo.ModuleName}");
         }
     }
 }
