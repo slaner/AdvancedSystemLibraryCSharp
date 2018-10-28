@@ -5,7 +5,7 @@ namespace TeamDEV.Asl.PInvoke {
     /// 
     /// </summary>
     [Flags]
-    public enum TraceFilters {
+    public enum PInvokeCaptureFilters {
         /// <summary>
         /// 
         /// </summary>

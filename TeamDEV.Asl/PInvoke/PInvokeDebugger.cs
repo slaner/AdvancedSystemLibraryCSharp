@@ -23,9 +23,9 @@ namespace TeamDEV.Asl.PInvoke {
         static readonly object threadLock = new object();
         
         /// <summary>
-        /// Executed when PInvoke call was traced
+        /// Executed when PInvoke call was captured
         /// </summary>
-        public static event PInvokeTraceEventHandler PInvokeTraced;
+        public static event PInvokeCapturedEventHandler PInvokeCaptured;
 
         /// <summary>
         /// 
@@ -34,7 +34,9 @@ namespace TeamDEV.Asl.PInvoke {
         /// <summary>
         /// 
         /// </summary>
-        public static TraceFilters TraceFilters { get; set; }
+        public static PInvokeCaptureFilters CaptureFilters { get; set; }
+
+        public static TextWriterTraceListener TraceListener { get; } = new TextWriterTraceListener();
 
         static TextWriterTraceListener m_traceListener;
         public static void Trace() {
@@ -42,9 +44,14 @@ namespace TeamDEV.Asl.PInvoke {
             m_traceListener.Write("");
             m_traceListener.Writer.ToString();
         }
-
-
-
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="errorCode"></param>
+        /// <param name="moduleHandle"></param>
+        /// <param name="args"></param>
+        /// <returns></returns>
         public static string TranslateError(int errorCode, IntPtr moduleHandle = default(IntPtr), params string[] args) {
             FormatMessageFlags flags = moduleHandle.IsZero() ? FormatMessageFlags.FromSystem : FormatMessageFlags.FromModule;
 
@@ -52,7 +59,7 @@ namespace TeamDEV.Asl.PInvoke {
             else flags |= FormatMessageFlags.IgnoreInserts;
 
             StringBuilder sbDescription = new StringBuilder(0x400);
-            int result = Kernel32.PInvoke_FormatMessage(
+            int result = Kernel32.FormatMessage(
                 flags,
                 moduleHandle,
                 errorCode,
@@ -70,9 +77,9 @@ namespace TeamDEV.Asl.PInvoke {
             return sbDescription.ToString();
         }
 
-        internal static void SafeTrace(PInvokeDebugInfo debugInfo) {
+        internal static void SafeCapture(PInvokeDebugInfo debugInfo) {
             lock (threadLock) {
-                PInvokeTraced?.Invoke(debugInfo);
+                PInvokeCaptured?.Invoke(debugInfo);
             }
         }
     }

@@ -1,11 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using TeamDEV.Asl.PInvoke.Internals.Enumerations;
+using TeamDEV.Asl.PInvoke.Internals.Methods;
 
 namespace TeamDEV.Asl.PInvoke {
     public static class ModuleManager {
+        public static readonly IntPtr NtDll;
+
+        static ModuleManager() {
+            NtDll = Kernel32.GetModuleHandle(Ntdll.ModuleName);
+        }
     }
 }

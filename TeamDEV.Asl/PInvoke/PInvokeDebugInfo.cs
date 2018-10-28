@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Runtime.InteropServices;
+using TeamDEV.Asl.PInvoke.Internals.Enumerations;
 
 namespace TeamDEV.Asl.PInvoke {
     /// <summary>
@@ -41,10 +42,57 @@ namespace TeamDEV.Asl.PInvoke {
         /// 
         /// </summary>
         public string ErrorDescription { get; internal set; }
+        /// <summary>
+        /// 
+        /// </summary>
+        public bool IsWarning { get; internal set; }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="moduleName"></param>
+        /// <param name="pinvokeName"></param>
+        /// <param name="callerName"></param>
+        /// <param name="returnValue"></param>
+        /// <param name="args"></param>
+        /// <returns></returns>
+        internal static PInvokeDebugInfo TraceDebugInfo(string moduleName, string pinvokeName, string callerName, NTSTATUS returnValue, params object[] args) {
+            return TraceDebugInfo(PInvokeDebugger.CaptureFilters, moduleName, pinvokeName, callerName, returnValue, args);
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="filter"></param>
+        /// <param name="moduleName"></param>
+        /// <param name="pinvokeName"></param>
+        /// <param name="callerName"></param>
+        /// <param name="returnValue"></param>
+        /// <param name="args"></param>
+        /// <returns></returns>
+        internal static PInvokeDebugInfo TraceDebugInfo(PInvokeCaptureFilters filter, string moduleName, string pinvokeName, string callerName, NTSTATUS returnValue, params object[] args) {
+            PInvokeDebugInfo debugInfo = SetupDebugInfo(filter, moduleName, pinvokeName, callerName, returnValue, args);
 
+            // trace only if NTSTATUS is error/warning
+            if (returnValue.IsError() || returnValue.IsWarning()) {
+                if (filter.HasFlag(PInvokeCaptureFilters.ErrorCode)) debugInfo.ErrorCode = (int) returnValue;
+                if (filter.HasFlag(PInvokeCaptureFilters.ErrorDescription)) debugInfo.ErrorDescription = PInvokeDebugger.TranslateError((int) returnValue, ModuleManager.NtDll);
+                debugInfo.IsWarning = returnValue.IsWarning();
+            }
+
+            return debugInfo;
+        }
+        /// <summary>
+        /// Trace debug information for specified PInvoke calls with global filter configuration.
+        /// </summary>
+        /// <param name="moduleName"></param>
+        /// <param name="pinvokeName"></param>
+        /// <param name="callerName"></param>
+        /// <param name="returnValue"></param>
+        /// <param name="errorReturnValue"></param>
+        /// <param name="args"></param>
+        /// <returns></returns>
         internal static PInvokeDebugInfo TraceDebugInfo(string moduleName, string pinvokeName, string callerName, object returnValue, object errorReturnValue, params object[] args) {
-            return TraceDebugInfo(PInvokeDebugger.TraceFilters, moduleName, pinvokeName, callerName, returnValue, errorReturnValue, args);
+            return TraceDebugInfo(PInvokeDebugger.CaptureFilters, moduleName, pinvokeName, callerName, returnValue, errorReturnValue, args);
         }
         /// <summary>
         /// Trace debug information for specified PInvoke calls.
@@ -57,11 +105,25 @@ namespace TeamDEV.Asl.PInvoke {
         /// <param name="errorReturnValue"></param>
         /// <param name="args"></param>
         /// <returns></returns>
-        internal static PInvokeDebugInfo TraceDebugInfo(TraceFilters filter, string moduleName, string pinvokeName, string callerName, object returnValue, object errorReturnValue, params object[] args) {
-            string moduleInfo = filter.HasFlag(TraceFilters.ModuleName) ? moduleName : InfoNotTraced;
-            string pinvokeInfo = filter.HasFlag(TraceFilters.PInvokeName) ? pinvokeName : InfoNotTraced;
-            string callerInfo = filter.HasFlag(TraceFilters.CallerName) ? callerName : InfoNotTraced;
-            object returnValueInfo = filter.HasFlag(TraceFilters.ReturnValue) ? returnValue : InfoNotTraced;
+        internal static PInvokeDebugInfo TraceDebugInfo(PInvokeCaptureFilters filter, string moduleName, string pinvokeName, string callerName, object returnValue, object errorReturnValue, params object[] args) {
+            PInvokeDebugInfo debugInfo = SetupDebugInfo(filter, moduleName, pinvokeName, callerName, returnValue, args);
+
+            // trace error code and description
+            // only if return value is equal to error return value
+            if (returnValue == errorReturnValue && returnValue != null) {
+                int errorCode = Marshal.GetLastWin32Error();
+                if (filter.HasFlag(PInvokeCaptureFilters.ErrorCode)) debugInfo.ErrorCode = errorCode;
+                if (filter.HasFlag(PInvokeCaptureFilters.ErrorDescription)) debugInfo.ErrorDescription = PInvokeDebugger.TranslateError(errorCode);
+            }
+            
+            return debugInfo;
+        }
+
+        private static PInvokeDebugInfo SetupDebugInfo(PInvokeCaptureFilters filter, string moduleName, string pinvokeName, string callerName, object returnValue, params object[] args) {
+            string moduleInfo = filter.HasFlag(PInvokeCaptureFilters.ModuleName) ? moduleName : InfoNotTraced;
+            string pinvokeInfo = filter.HasFlag(PInvokeCaptureFilters.PInvokeName) ? pinvokeName : InfoNotTraced;
+            string callerInfo = filter.HasFlag(PInvokeCaptureFilters.CallerName) ? callerName : InfoNotTraced;
+            object returnValueInfo = filter.HasFlag(PInvokeCaptureFilters.ReturnValue) ? returnValue : InfoNotTraced;
 
             PInvokeDebugInfo debugInfo = new PInvokeDebugInfo {
                 ModuleName = moduleInfo,
@@ -70,9 +132,9 @@ namespace TeamDEV.Asl.PInvoke {
                 ReturnValue = returnValueInfo
             };
 
-            if (filter.HasFlag(TraceFilters.Parameters)) {
+            if (filter.HasFlag(PInvokeCaptureFilters.Parameters)) {
                 if (args.Length % 2 != 0) throw new ArgumentException(SR.GetString("SR_InvalidParameterArgsLength"));
-                
+
                 for (int i = 0; i < args.Length; i += 2) {
                     string paramName = (string) args[i];
                     object paramValue = args[i + 1];
@@ -81,15 +143,6 @@ namespace TeamDEV.Asl.PInvoke {
                 }
             }
 
-            // trace error code and description
-            // only if return value is equal to error return value
-            if (returnValue == errorReturnValue) {
-                int errorCode = Marshal.GetLastWin32Error();
-                if (filter.HasFlag(TraceFilters.ErrorCode)) debugInfo.ErrorCode = errorCode;
-                if (filter.HasFlag(TraceFilters.ErrorDescription)) debugInfo.ErrorDescription = PInvokeDebugger.TranslateError(errorCode);
-            }
-
-                
             return debugInfo;
         }
     }
