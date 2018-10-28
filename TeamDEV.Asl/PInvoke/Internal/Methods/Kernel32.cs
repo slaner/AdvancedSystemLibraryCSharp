@@ -18,15 +18,12 @@ namespace TeamDEV.Asl.PInvoke.Internals.Methods {
         /// </summary>
         public const string ModuleName = nameof(Kernel32);
 
-
-
+        [DllImport("kernel32", CharSet = CharSet.Auto, SetLastError = true, EntryPoint = "FormatMessage")]
+        public static extern int FormatMessage(FormatMessageFlags dwFlags, IntPtr lpSource, int dwMessageId, int dwLanguageId, StringBuilder lpBuffer, int nSize, string[] Arguments);
+        
         [DllImport("kernel32", CharSet = CharSet.Auto, SetLastError = true, EntryPoint = "OutputDebugString")]
         internal static extern void PInvoke_OutputDebugString(string lpOutputString);
-        [DllImport("kernel32", CharSet = CharSet.Auto, SetLastError = true, EntryPoint = "FormatMessage")]
-        internal static extern int PInvoke_FormatMessage(FormatMessageFlags dwFlags, IntPtr lpSource, int dwMessageId, int dwLanguageId, StringBuilder lpBuffer, int nSize, string[] Arguments);
-
-
-
+        
         [DllImport("kernel32", CharSet = CharSet.Auto, SetLastError = true, EntryPoint = "GetSystemDirectory")]
         internal static extern int PInvoke_GetSystemDirectory(StringBuilder lpBuffer, int uSize);
         [DllImport("kernel32", CharSet = CharSet.Auto, SetLastError = true, EntryPoint = "GetWindowsDirectory")]
@@ -92,8 +89,29 @@ namespace TeamDEV.Asl.PInvoke.Internals.Methods {
         internal static extern WaitResult PInvoke_WaitForSingleObject(IntPtr hObject, int dwMilliseconds);
         [DllImport("kernel32", CharSet = CharSet.Auto, SetLastError = true, EntryPoint = "CloseHandle")]
         internal static extern bool PInvoke_CloseHandle(IntPtr hObject);
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="lpOutputString"></param>
+        public static void OutputDebugString(string lpOutputString, [CallerMemberName] string callerName = "") {
+            if (!PInvokeDebugger.LoggingEnabled) {
+                PInvoke_OutputDebugString(lpOutputString);
+                return;
+            }
 
+            PInvoke_OutputDebugString(lpOutputString);
+            PInvokeDebugInfo debugInfo = PInvokeDebugInfo.TraceDebugInfo(
+                ModuleName,
+                nameof(GetSystemDirectory),
+                callerName,
+                null,
+                null,
+                nameof(lpOutputString), lpOutputString
+            );
 
+            PInvokeDebugger.SafeCapture(debugInfo);
+        }
         /// <summary>
         /// 
         /// </summary>
@@ -115,7 +133,7 @@ namespace TeamDEV.Asl.PInvoke.Internals.Methods {
                 nameof(uSize), uSize
             );
 
-            PInvokeDebugger.SafeTrace(debugInfo);
+            PInvokeDebugger.SafeCapture(debugInfo);
             return returnValue;
         }
         /// <summary>
@@ -139,7 +157,7 @@ namespace TeamDEV.Asl.PInvoke.Internals.Methods {
                 nameof(uSize), uSize
             );
 
-            PInvokeDebugger.SafeTrace(debugInfo);
+            PInvokeDebugger.SafeCapture(debugInfo);
             return returnValue;
         }
         /// <summary>
@@ -165,7 +183,7 @@ namespace TeamDEV.Asl.PInvoke.Internals.Methods {
                 nameof(ucchMax), ucchMax
             );
 
-            PInvokeDebugger.SafeTrace(debugInfo);
+            PInvokeDebugger.SafeCapture(debugInfo);
             return returnValue;
         }
         /// <summary>
@@ -193,7 +211,7 @@ namespace TeamDEV.Asl.PInvoke.Internals.Methods {
                 nameof(lpdwSize), lpdwSize
             );
 
-            PInvokeDebugger.SafeTrace(debugInfo);
+            PInvokeDebugger.SafeCapture(debugInfo);
             return returnValue;
         }
         /// <summary>
@@ -217,7 +235,7 @@ namespace TeamDEV.Asl.PInvoke.Internals.Methods {
                 nameof(dwProcessId), dwProcessId
             );
 
-            PInvokeDebugger.SafeTrace(debugInfo);
+            PInvokeDebugger.SafeCapture(debugInfo);
             return returnValue;
         }
         /// <summary>
@@ -243,7 +261,7 @@ namespace TeamDEV.Asl.PInvoke.Internals.Methods {
                 nameof(dwProcessId), dwProcessId
             );
 
-            PInvokeDebugger.SafeTrace(debugInfo);
+            PInvokeDebugger.SafeCapture(debugInfo);
             return returnValue;
         }
         /// <summary>
@@ -267,7 +285,7 @@ namespace TeamDEV.Asl.PInvoke.Internals.Methods {
                 nameof(bIs64WowProcess), bIs64WowProcess
             );
 
-            PInvokeDebugger.SafeTrace(debugInfo);
+            PInvokeDebugger.SafeCapture(debugInfo);
             return returnValue;
         }
         /// <summary>
@@ -291,7 +309,7 @@ namespace TeamDEV.Asl.PInvoke.Internals.Methods {
                 nameof(dwExitCode), dwExitCode
             );
 
-            PInvokeDebugger.SafeTrace(debugInfo);
+            PInvokeDebugger.SafeCapture(debugInfo);
             return returnValue;
         }
         /// <summary>
@@ -313,7 +331,7 @@ namespace TeamDEV.Asl.PInvoke.Internals.Methods {
                 nameof(dwProcessId), dwProcessId
             );
 
-            PInvokeDebugger.SafeTrace(debugInfo);
+            PInvokeDebugger.SafeCapture(debugInfo);
             return returnValue;
         }
         /// <summary>
@@ -335,7 +353,7 @@ namespace TeamDEV.Asl.PInvoke.Internals.Methods {
                 nameof(dwProcessId), dwProcessId
             );
 
-            PInvokeDebugger.SafeTrace(debugInfo);
+            PInvokeDebugger.SafeCapture(debugInfo);
             return returnValue;
         }
         /// <summary>
@@ -359,7 +377,7 @@ namespace TeamDEV.Asl.PInvoke.Internals.Methods {
                 nameof(pe32), pe32
             );
 
-            PInvokeDebugger.SafeTrace(debugInfo);
+            PInvokeDebugger.SafeCapture(debugInfo);
             return returnValue;
         }
         /// <summary>
@@ -383,7 +401,7 @@ namespace TeamDEV.Asl.PInvoke.Internals.Methods {
                 nameof(pe32), pe32
             );
 
-            PInvokeDebugger.SafeTrace(debugInfo);
+            PInvokeDebugger.SafeCapture(debugInfo);
             return returnValue;
         }
 
@@ -415,7 +433,7 @@ namespace TeamDEV.Asl.PInvoke.Internals.Methods {
                 nameof(flProtect), flProtect
             );
 
-            PInvokeDebugger.SafeTrace(debugInfo);
+            PInvokeDebugger.SafeCapture(debugInfo);
             return returnValue;
         }
         /// <summary>
@@ -443,7 +461,7 @@ namespace TeamDEV.Asl.PInvoke.Internals.Methods {
                 nameof(flFreeType), flFreeType
             );
 
-            PInvokeDebugger.SafeTrace(debugInfo);
+            PInvokeDebugger.SafeCapture(debugInfo);
             return returnValue;
         }
         /// <summary>
@@ -473,7 +491,7 @@ namespace TeamDEV.Asl.PInvoke.Internals.Methods {
                 nameof(lpflOldProtect), lpflOldProtect
             );
 
-            PInvokeDebugger.SafeTrace(debugInfo);
+            PInvokeDebugger.SafeCapture(debugInfo);
             return returnValue;
         }
         /// <summary>
@@ -503,7 +521,7 @@ namespace TeamDEV.Asl.PInvoke.Internals.Methods {
                 nameof(nReadBytes), nReadBytes
             );
 
-            PInvokeDebugger.SafeTrace(debugInfo);
+            PInvokeDebugger.SafeCapture(debugInfo);
             return returnValue;
         }
         /// <summary>
@@ -533,7 +551,7 @@ namespace TeamDEV.Asl.PInvoke.Internals.Methods {
                 nameof(nWrittenBytes), nWrittenBytes
             );
 
-            PInvokeDebugger.SafeTrace(debugInfo);
+            PInvokeDebugger.SafeCapture(debugInfo);
             return returnValue;
         }
         /// <summary>
@@ -573,7 +591,7 @@ namespace TeamDEV.Asl.PInvoke.Internals.Methods {
                 nameof(lpProcessInformation), lpProcessInformation
             );
 
-            PInvokeDebugger.SafeTrace(debugInfo);
+            PInvokeDebugger.SafeCapture(debugInfo);
             return returnValue;
         }
         /// <summary>
@@ -597,7 +615,7 @@ namespace TeamDEV.Asl.PInvoke.Internals.Methods {
                 nameof(me32), me32
             );
 
-            PInvokeDebugger.SafeTrace(debugInfo);
+            PInvokeDebugger.SafeCapture(debugInfo);
             return returnValue;
         }
         /// <summary>
@@ -621,7 +639,7 @@ namespace TeamDEV.Asl.PInvoke.Internals.Methods {
                 nameof(me32), me32
             );
 
-            PInvokeDebugger.SafeTrace(debugInfo);
+            PInvokeDebugger.SafeCapture(debugInfo);
             return returnValue;
         }
         /// <summary>
@@ -655,7 +673,7 @@ namespace TeamDEV.Asl.PInvoke.Internals.Methods {
                 nameof(lpThreadId), lpThreadId
             );
 
-            PInvokeDebugger.SafeTrace(debugInfo);
+            PInvokeDebugger.SafeCapture(debugInfo);
             return returnValue;
         }
         /// <summary>
@@ -675,7 +693,7 @@ namespace TeamDEV.Asl.PInvoke.Internals.Methods {
                 false
             );
 
-            PInvokeDebugger.SafeTrace(debugInfo);
+            PInvokeDebugger.SafeCapture(debugInfo);
             return returnValue;
         }
         /// <summary>
@@ -697,7 +715,7 @@ namespace TeamDEV.Asl.PInvoke.Internals.Methods {
                 nameof(dwProcessId), dwProcessId
             );
 
-            PInvokeDebugger.SafeTrace(debugInfo);
+            PInvokeDebugger.SafeCapture(debugInfo);
             return returnValue;
         }
         /// <summary>
@@ -717,7 +735,7 @@ namespace TeamDEV.Asl.PInvoke.Internals.Methods {
                 false
             );
 
-            PInvokeDebugger.SafeTrace(debugInfo);
+            PInvokeDebugger.SafeCapture(debugInfo);
             return returnValue;
         }
         /// <summary>
@@ -739,7 +757,7 @@ namespace TeamDEV.Asl.PInvoke.Internals.Methods {
                 nameof(lpFileName), lpFileName
             );
 
-            PInvokeDebugger.SafeTrace(debugInfo);
+            PInvokeDebugger.SafeCapture(debugInfo);
             return returnValue;
         }
         /// <summary>
@@ -761,7 +779,7 @@ namespace TeamDEV.Asl.PInvoke.Internals.Methods {
                 nameof(hLibModule), hLibModule
             );
 
-            PInvokeDebugger.SafeTrace(debugInfo);
+            PInvokeDebugger.SafeCapture(debugInfo);
             return returnValue;
         }
         /// <summary>
@@ -785,7 +803,7 @@ namespace TeamDEV.Asl.PInvoke.Internals.Methods {
                 nameof(lpProcedureName), lpProcedureName
             );
 
-            PInvokeDebugger.SafeTrace(debugInfo);
+            PInvokeDebugger.SafeCapture(debugInfo);
             return returnValue;
         }
         /// <summary>
@@ -807,7 +825,7 @@ namespace TeamDEV.Asl.PInvoke.Internals.Methods {
                 nameof(lpModuleName), lpModuleName
             );
 
-            PInvokeDebugger.SafeTrace(debugInfo);
+            PInvokeDebugger.SafeCapture(debugInfo);
             return returnValue;
         }
         /// <summary>
@@ -831,7 +849,7 @@ namespace TeamDEV.Asl.PInvoke.Internals.Methods {
                 nameof(dwMilliseconds), dwMilliseconds
             );
 
-            PInvokeDebugger.SafeTrace(debugInfo);
+            PInvokeDebugger.SafeCapture(debugInfo);
             return returnValue;
         }
         /// <summary>
@@ -853,7 +871,7 @@ namespace TeamDEV.Asl.PInvoke.Internals.Methods {
                 nameof(hObject), hObject
             );
 
-            PInvokeDebugger.SafeTrace(debugInfo);
+            PInvokeDebugger.SafeCapture(debugInfo);
             return returnValue;
         }
     }
