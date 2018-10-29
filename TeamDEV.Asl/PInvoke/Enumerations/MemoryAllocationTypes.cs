@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace TeamDEV.Asl.PInvoke.Internals.Enumerations {
+namespace TeamDEV.Asl.PInvoke.Enumerations {
     [Flags]
     public enum MemoryAllocationTypes : uint {
         Commit = 0x1000,

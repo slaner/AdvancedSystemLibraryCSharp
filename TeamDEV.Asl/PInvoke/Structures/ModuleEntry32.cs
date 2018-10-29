@@ -2,7 +2,7 @@
 using System;
 using System.Runtime.InteropServices;
 
-namespace TeamDEV.Asl.PInvoke.Internals.Structures {
+namespace TeamDEV.Asl.PInvoke.Structures {
         [StructLayout(LayoutKind.Sequential)]
         public struct ModuleEntry32 {
             public uint dwSize;

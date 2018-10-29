@@ -1,7 +1,7 @@
 ﻿// $LEGAL_NOTICE
 using System;
 
-namespace TeamDEV.Asl.PInvoke.Internals.Enumerations {
+namespace TeamDEV.Asl.PInvoke.Enumerations {
     public enum NTSTATUS : uint {
         STATUS_SUCCESS = 0x00000000,
         FACILITY_USB_ERROR_CODE = 0x00000010,

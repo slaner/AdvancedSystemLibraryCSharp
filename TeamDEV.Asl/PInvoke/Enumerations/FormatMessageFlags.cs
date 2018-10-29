@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace TeamDEV.Asl.PInvoke.Internals.Enumerations {
+namespace TeamDEV.Asl.PInvoke.Enumerations {
     [Flags]
     public enum FormatMessageFlags {
         AllocateBuffer = 0x100,

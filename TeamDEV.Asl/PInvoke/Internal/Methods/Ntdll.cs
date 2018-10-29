@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
-using TeamDEV.Asl.PInvoke.Internals.Enumerations;
-using TeamDEV.Asl.PInvoke.Internals.Structures;
+using TeamDEV.Asl.PInvoke.Enumerations;
+using TeamDEV.Asl.PInvoke.Structures;
 
 namespace TeamDEV.Asl.PInvoke.Internals.Methods {
     /// <summary>
