@@ -7,7 +7,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using TeamDEV.Asl.Extensions;
-using TeamDEV.Asl.PInvoke.Internals.Enumerations;
+using TeamDEV.Asl.PInvoke.Enumerations;
 using TeamDEV.Asl.PInvoke.Internals.Methods;
 
 namespace TeamDEV.Asl.PInvoke {
@@ -30,7 +30,7 @@ namespace TeamDEV.Asl.PInvoke {
         /// <summary>
         /// 
         /// </summary>
-        public static bool LoggingEnabled { get; set; }
+        public static bool LoggingEnabled { get; set; } = false;
         /// <summary>
         /// 
         /// </summary>

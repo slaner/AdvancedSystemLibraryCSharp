@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Runtime.InteropServices;
-using TeamDEV.Asl.PInvoke.Internals.Enumerations;
+using TeamDEV.Asl.PInvoke.Enumerations;
 
 namespace TeamDEV.Asl.PInvoke {
     /// <summary>
@@ -13,6 +13,8 @@ namespace TeamDEV.Asl.PInvoke {
         /// 
         /// </summary>
         public const string InfoNotTraced = "<NotTraced>";
+
+        private IReadOnlyDictionary<string, object> cachedParametersCollection;
 
         /// <summary>
         /// 
@@ -33,7 +35,7 @@ namespace TeamDEV.Asl.PInvoke {
         /// <summary>
         /// 
         /// </summary>
-        public PInvokeParameters Parameters { get; } = new PInvokeParameters();
+        public IReadOnlyDictionary<string, object> Parameters { get; private set; }
         /// <summary>
         /// 
         /// </summary>
@@ -46,6 +48,10 @@ namespace TeamDEV.Asl.PInvoke {
         /// 
         /// </summary>
         public bool IsWarning { get; internal set; }
+        /// <summary>
+        /// 
+        /// </summary>
+        public bool IsError { get; internal set; }
 
         /// <summary>
         /// 
@@ -77,6 +83,7 @@ namespace TeamDEV.Asl.PInvoke {
                 if (filter.HasFlag(PInvokeCaptureFilters.ErrorCode)) debugInfo.ErrorCode = (int) returnValue;
                 if (filter.HasFlag(PInvokeCaptureFilters.ErrorDescription)) debugInfo.ErrorDescription = PInvokeDebugger.TranslateError((int) returnValue, ModuleManager.NtDll);
                 debugInfo.IsWarning = returnValue.IsWarning();
+                debugInfo.IsError = returnValue.IsError();
             }
 
             return debugInfo;
@@ -114,6 +121,7 @@ namespace TeamDEV.Asl.PInvoke {
                 int errorCode = Marshal.GetLastWin32Error();
                 if (filter.HasFlag(PInvokeCaptureFilters.ErrorCode)) debugInfo.ErrorCode = errorCode;
                 if (filter.HasFlag(PInvokeCaptureFilters.ErrorDescription)) debugInfo.ErrorDescription = PInvokeDebugger.TranslateError(errorCode);
+                debugInfo.IsError = true;
             }
             
             return debugInfo;
@@ -135,12 +143,15 @@ namespace TeamDEV.Asl.PInvoke {
             if (filter.HasFlag(PInvokeCaptureFilters.Parameters)) {
                 if (args.Length % 2 != 0) throw new ArgumentException(SR.GetString("SR_InvalidParameterArgsLength"));
 
+                Dictionary<string, object> parameters = new Dictionary<string, object>();
                 for (int i = 0; i < args.Length; i += 2) {
                     string paramName = (string) args[i];
                     object paramValue = args[i + 1];
 
-                    debugInfo.Parameters[paramName] = paramValue;
+                    parameters[paramName] = paramValue;
                 }
+
+                debugInfo.Parameters = parameters;
             }
 
             return debugInfo;

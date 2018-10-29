@@ -5,7 +5,7 @@ namespace TeamDEV.Asl.PInvoke {
     /// 
     /// </summary>
     [Flags]
-    public enum PInvokeCaptureFilters {
+    public enum PInvokeCaptureFilters: ushort {
         /// <summary>
         /// 
         /// </summary>
@@ -42,5 +42,9 @@ namespace TeamDEV.Asl.PInvoke {
         /// 
         /// </summary>
         StackTrace = 0x800,
+        /// <summary>
+        /// 
+        /// </summary>
+        CaptureAll = 0xFFFF,
     }
 }

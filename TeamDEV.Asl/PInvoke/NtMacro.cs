@@ -1,4 +1,4 @@
-﻿using TeamDEV.Asl.PInvoke.Internals.Enumerations;
+﻿using TeamDEV.Asl.PInvoke.Enumerations;
 
 namespace TeamDEV.Asl.PInvoke {
     public static class NtMacro {

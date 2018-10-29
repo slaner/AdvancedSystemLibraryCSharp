@@ -9,5 +9,8 @@ namespace TeamDEV.Asl.SystemManagements.Process {
     /// 
     /// </summary>
     public sealed class Process: SystemObject {
+        public Process(): base(0) {
+
+        }
     }
 }
