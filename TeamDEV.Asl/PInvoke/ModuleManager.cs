@@ -1,5 +1,5 @@
 ﻿using System;
-using TeamDEV.Asl.PInvoke.Internals.Methods;
+using TeamDEV.Asl.PInvoke.Internal.Methods;
 
 namespace TeamDEV.Asl.PInvoke {
     public static class ModuleManager {

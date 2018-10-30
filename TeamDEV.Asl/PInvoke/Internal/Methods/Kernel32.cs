@@ -8,7 +8,7 @@ using TeamDEV.Asl.PInvoke.Internal.Enumerations;
 using TeamDEV.Asl.PInvoke.Enumerations;
 using TeamDEV.Asl.PInvoke.Structures;
 
-namespace TeamDEV.Asl.PInvoke.Internals.Methods {
+namespace TeamDEV.Asl.PInvoke.Internal.Methods {
     /// <summary>
     /// 
     /// </summary>
