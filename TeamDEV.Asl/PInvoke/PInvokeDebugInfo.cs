@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using TeamDEV.Asl.PInvoke.Enumerations;
 
@@ -14,7 +15,7 @@ namespace TeamDEV.Asl.PInvoke {
         /// </summary>
         public const string InfoNotTraced = "<NotTraced>";
 
-        private IReadOnlyDictionary<string, object> cachedParametersCollection;
+        private readonly IReadOnlyDictionary<string, object> cachedParametersCollection;
 
         /// <summary>
         /// 
@@ -63,30 +64,7 @@ namespace TeamDEV.Asl.PInvoke {
         /// <param name="args"></param>
         /// <returns></returns>
         internal static PInvokeDebugInfo TraceDebugInfo(string moduleName, string pinvokeName, string callerName, NTSTATUS returnValue, params object[] args) {
-            return TraceDebugInfo(PInvokeDebugger.CaptureFilters, moduleName, pinvokeName, callerName, returnValue, args);
-        }
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="filter"></param>
-        /// <param name="moduleName"></param>
-        /// <param name="pinvokeName"></param>
-        /// <param name="callerName"></param>
-        /// <param name="returnValue"></param>
-        /// <param name="args"></param>
-        /// <returns></returns>
-        internal static PInvokeDebugInfo TraceDebugInfo(PInvokeCaptureFilters filter, string moduleName, string pinvokeName, string callerName, NTSTATUS returnValue, params object[] args) {
-            PInvokeDebugInfo debugInfo = SetupDebugInfo(filter, moduleName, pinvokeName, callerName, returnValue, args);
-
-            // trace only if NTSTATUS is error/warning
-            if (returnValue.IsError() || returnValue.IsWarning()) {
-                if (filter.HasFlag(PInvokeCaptureFilters.ErrorCode)) debugInfo.ErrorCode = (int) returnValue;
-                if (filter.HasFlag(PInvokeCaptureFilters.ErrorDescription)) debugInfo.ErrorDescription = PInvokeDebugger.TranslateError((int) returnValue, ModuleManager.NtDll);
-                debugInfo.IsWarning = returnValue.IsWarning();
-                debugInfo.IsError = returnValue.IsError();
-            }
-
-            return debugInfo;
+            return TraceDebugInfo(PInvokeDebugger.CaptureFilters, moduleName, pinvokeName, callerName, returnValue, null, args);
         }
         /// <summary>
         /// Trace debug information for specified PInvoke calls with global filter configuration.
@@ -115,15 +93,25 @@ namespace TeamDEV.Asl.PInvoke {
         internal static PInvokeDebugInfo TraceDebugInfo(PInvokeCaptureFilters filter, string moduleName, string pinvokeName, string callerName, object returnValue, object errorReturnValue, params object[] args) {
             PInvokeDebugInfo debugInfo = SetupDebugInfo(filter, moduleName, pinvokeName, callerName, returnValue, args);
 
-            // trace error code and description
-            // only if return value is equal to error return value
-            if (returnValue == errorReturnValue && returnValue != null) {
-                int errorCode = Marshal.GetLastWin32Error();
-                if (filter.HasFlag(PInvokeCaptureFilters.ErrorCode)) debugInfo.ErrorCode = errorCode;
-                if (filter.HasFlag(PInvokeCaptureFilters.ErrorDescription)) debugInfo.ErrorDescription = PInvokeDebugger.TranslateError(errorCode);
-                debugInfo.IsError = true;
+            // check if type of returnValue is NTSTATUS
+            if (returnValue is NTSTATUS) {
+                NTSTATUS status = (NTSTATUS) returnValue;
+
+                if (status.IsError() || status.IsWarning()) {
+                    if (filter.HasFlag(PInvokeCaptureFilters.ErrorCode)) debugInfo.ErrorCode = (int) status;
+                    if (filter.HasFlag(PInvokeCaptureFilters.ErrorDescription)) debugInfo.ErrorDescription = PInvokeDebugger.TranslateError((int) returnValue, ModuleManager.NtDll);
+                    debugInfo.IsWarning = status.IsWarning();
+                    debugInfo.IsError = status.IsError();
+                }
+            } else {
+                if (returnValue == errorReturnValue && returnValue != null) {
+                    int errorCode = Marshal.GetLastWin32Error();
+                    if (filter.HasFlag(PInvokeCaptureFilters.ErrorCode)) debugInfo.ErrorCode = errorCode;
+                    if (filter.HasFlag(PInvokeCaptureFilters.ErrorDescription)) debugInfo.ErrorDescription = PInvokeDebugger.TranslateError(errorCode);
+                    debugInfo.IsError = true;
+                }
             }
-            
+
             return debugInfo;
         }
 
@@ -139,15 +127,16 @@ namespace TeamDEV.Asl.PInvoke {
                 CallerName = callerInfo,
                 ReturnValue = returnValueInfo
             };
-
+            
             if (filter.HasFlag(PInvokeCaptureFilters.Parameters)) {
+                if (args == null) throw new ArgumentNullException(nameof(args));
                 if (args.Length % 2 != 0) throw new ArgumentException(SR.GetString("SR_InvalidParameterArgsLength"));
 
                 Dictionary<string, object> parameters = new Dictionary<string, object>();
                 for (int i = 0; i < args.Length; i += 2) {
                     string paramName = (string) args[i];
                     object paramValue = args[i + 1];
-
+ 
                     parameters[paramName] = paramValue;
                 }
 
