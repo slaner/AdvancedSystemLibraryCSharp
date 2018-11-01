@@ -68,7 +68,6 @@
     <Compile Include="PInvoke\NtMacro.cs" />
     <Compile Include="PInvoke\PInvokeDebugger.cs" />
     <Compile Include="PInvoke\PInvokeDebugInfo.cs" />
-    <Compile Include="PInvoke\PInvokeParameters.cs" />
     <Compile Include="PInvoke\Structures\TokenPrivileges.cs" />
     <Compile Include="PInvoke\Structures\ClientId.cs" />
     <Compile Include="PInvoke\Structures\Luid.cs" />
