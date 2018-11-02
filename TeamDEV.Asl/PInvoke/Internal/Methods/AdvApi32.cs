@@ -24,7 +24,6 @@ namespace TeamDEV.Asl.PInvoke.Internal.Methods {
         internal static extern bool PInvoke_LookupAccountSid(string lpSystemName, IntPtr Sid, string Name, out int cchName, string ReferencedDomainName, out int cchReferencedDomainName, out SidNameUse peUse);
         [DllImport("advapi32", CharSet = CharSet.Auto, EntryPoint = "OpenProcessToken")]
         internal static extern bool PInvoke_OpenProcessToken(IntPtr ProcessHandle, TokenAccess Access, out IntPtr TokenHandle);
-
         [DllImport("advapi32", CharSet = CharSet.Auto, EntryPoint = "LookupPrivilegeValue")]
         internal static extern bool PInvoke_LookupPrivilegeValue(string lpSystemName, string lpName, out Luid Luid);
         [DllImport("advapi32", CharSet = CharSet.Auto, EntryPoint = "AdjustTokenPrivileges")]
@@ -156,7 +155,5 @@ namespace TeamDEV.Asl.PInvoke.Internal.Methods {
             PInvokeDebugger.SafeCapture(debugInfo);
             return returnValue;
         }
-
-
     }
 }
