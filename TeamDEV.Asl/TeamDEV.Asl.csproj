@@ -50,6 +50,7 @@
     <Compile Include="PInvoke\Enumerations\TokenInformationClass.cs" />
     <Compile Include="PInvoke\Enumerations\WaitResult.cs" />
     <Compile Include="PInvoke\Internal\Methods\AdvApi32.cs" />
+    <Compile Include="PInvoke\Internal\Methods\PsApi.cs" />
     <Compile Include="PInvoke\ModuleManager.cs" />
     <Compile Include="PInvoke\Enumerations\AccessMask.cs" />
     <Compile Include="PInvoke\Enumerations\FormatMessageFlags.cs" />
