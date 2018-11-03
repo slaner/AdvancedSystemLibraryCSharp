@@ -1,4 +1,5 @@
 ﻿using System;
+
 using TeamDEV.Asl.PInvoke.Internal.Methods;
 
 namespace TeamDEV.Asl.PInvoke {

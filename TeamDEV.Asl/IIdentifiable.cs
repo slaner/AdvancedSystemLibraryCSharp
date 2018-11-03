@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace TeamDEV.Asl {
+﻿namespace TeamDEV.Asl {
     /// <summary>
     /// 
     /// </summary>
