@@ -45,12 +45,15 @@
     <Compile Include="Extensions\Numeric.cs" />
     <Compile Include="Extensions\Pointer.cs" />
     <Compile Include="ITerminatable.cs" />
+    <Compile Include="PInvoke\Enumerations\ObjectAttributesFlags.cs" />
     <Compile Include="PInvoke\Enumerations\SidNameUse.cs" />
     <Compile Include="PInvoke\Enumerations\TokenAccess.cs" />
     <Compile Include="PInvoke\Enumerations\TokenInformationClass.cs" />
     <Compile Include="PInvoke\Enumerations\WaitResult.cs" />
+    <Compile Include="PInvoke\FacilityCode.cs" />
     <Compile Include="PInvoke\Internal\Methods\AdvApi32.cs" />
     <Compile Include="PInvoke\Internal\Methods\PsApi.cs" />
+    <Compile Include="PInvoke\Internal\UncheckedPInvokeHelper.cs" />
     <Compile Include="PInvoke\ModuleManager.cs" />
     <Compile Include="PInvoke\Enumerations\AccessMask.cs" />
     <Compile Include="PInvoke\Enumerations\FormatMessageFlags.cs" />
@@ -69,6 +72,8 @@
     <Compile Include="PInvoke\NtMacro.cs" />
     <Compile Include="PInvoke\PInvokeDebugger.cs" />
     <Compile Include="PInvoke\PInvokeDebugInfo.cs" />
+    <Compile Include="PInvoke\SeverityCode.cs" />
+    <Compile Include="PInvoke\StatusResolver.cs" />
     <Compile Include="PInvoke\Structures\TokenPrivileges.cs" />
     <Compile Include="PInvoke\Structures\ClientId.cs" />
     <Compile Include="PInvoke\Structures\Luid.cs" />
