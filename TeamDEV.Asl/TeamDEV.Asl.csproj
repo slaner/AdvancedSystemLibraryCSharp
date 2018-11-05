@@ -54,6 +54,7 @@
     <Compile Include="PInvoke\Internal\Methods\AdvApi32.cs" />
     <Compile Include="PInvoke\Internal\Methods\PsApi.cs" />
     <Compile Include="PInvoke\Internal\UncheckedPInvokeHelper.cs" />
+    <Compile Include="PInvoke\Internal\UncheckedPInvokeHelper.Process.cs" />
     <Compile Include="PInvoke\ModuleManager.cs" />
     <Compile Include="PInvoke\Enumerations\AccessMask.cs" />
     <Compile Include="PInvoke\Enumerations\FormatMessageFlags.cs" />
@@ -73,7 +74,9 @@
     <Compile Include="PInvoke\PInvokeDebugger.cs" />
     <Compile Include="PInvoke\PInvokeDebugInfo.cs" />
     <Compile Include="PInvoke\SeverityCode.cs" />
-    <Compile Include="PInvoke\StatusResolver.cs" />
+    <Compile Include="PInvoke\NtStatusResolver.cs" />
+    <Compile Include="PInvoke\Structures\ProcessBasicInformation.cs" />
+    <Compile Include="PInvoke\Structures\ProcessExtendedBasicInformation.cs" />
     <Compile Include="PInvoke\Structures\TokenPrivileges.cs" />
     <Compile Include="PInvoke\Structures\ClientId.cs" />
     <Compile Include="PInvoke\Structures\Luid.cs" />
@@ -86,7 +89,6 @@
     <Compile Include="SystemManagements\Process\Process.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SystemManagements\Process\ProcessEntry.cs" />
-    <Compile Include="SystemObject.cs" />
     <Compile Include="Utilities\StringUtilities.cs" />
   </ItemGroup>
   <ItemGroup />
