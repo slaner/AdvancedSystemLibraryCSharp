@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
+
 using TeamDEV.Asl.PInvoke.Enumerations;
 using TeamDEV.Asl.PInvoke.Structures;
 
@@ -37,12 +38,35 @@ namespace TeamDEV.Asl.PInvoke.Internal.Methods {
         internal static extern NTSTATUS PInvoke_NtOpenSymbolicLinkObject(IntPtr LinkHandle, AccessMask Access, IntPtr ObjectAttributes);
         [DllImport("ntdll", CharSet = CharSet.Auto, EntryPoint = "NtOpenProcess")]
         internal static extern NTSTATUS PInvoke_NtOpenProcess(ref IntPtr ProcessHandle, ProcessAccess Access, ref ObjectAttributes ObjectAttributes, ref ClientId Cid);
-
+        [DllImport("ntdll", CharSet = CharSet.Auto, EntryPoint = "NtTerminateProcess")]
+        internal static extern NTSTATUS PInvoke_NtTerminateProcess(IntPtr ProcessHandle, NTSTATUS ExitStatus);
         [DllImport("ntdll", CharSet = CharSet.Auto, EntryPoint = "NtQuerySystemInformation")]
         internal static extern NTSTATUS PInvoke_NtQuerySystemInformation(SystemInformationClass InfoClass, IntPtr Info, uint InfoLength, out uint ReturnLength);
         [DllImport("ntdll", CharSet = CharSet.Auto, EntryPoint = "NtQueryInformationProcess")]
         internal static extern NTSTATUS PInvoke_NtQueryInformationProcess(IntPtr ProcessHandle, ProcessInformationClass InfoClass, IntPtr Info, uint InfoLength, out uint ReturnLength);
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="ProcessHandle"></param>
+        /// <param name="ExitStatus"></param>
+        /// <returns></returns>
+        public static NTSTATUS NtTerminateProcess(IntPtr ProcessHandle, NTSTATUS ExitStatus, [CallerMemberName] string callerName = "") {
+            if (!PInvokeDebugger.LoggingEnabled)
+                return PInvoke_NtTerminateProcess(ProcessHandle, ExitStatus);
 
+            NTSTATUS returnValue = PInvoke_NtTerminateProcess(ProcessHandle, ExitStatus);
+            PInvokeDebugInfo debugInfo = PInvokeDebugInfo.TraceDebugInfo(
+                ModuleName,
+                nameof(NtTerminateProcess),
+                callerName,
+                returnValue,
+                nameof(ProcessHandle), ProcessHandle,
+                nameof(ExitStatus), ExitStatus
+            );
+
+            PInvokeDebugger.SafeCapture(debugInfo);
+            return returnValue;
+        }
         /// <summary>
         /// 
         /// </summary>

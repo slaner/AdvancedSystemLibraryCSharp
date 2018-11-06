@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace TeamDEV.Asl.PInvoke {
+﻿namespace TeamDEV.Asl.PInvoke {
     /// <summary>
     /// Event handler for PInvoke capture event.
     /// </summary>
