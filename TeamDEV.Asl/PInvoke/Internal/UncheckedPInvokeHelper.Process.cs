@@ -14,7 +14,6 @@ namespace TeamDEV.Asl.PInvoke.Internal {
             public static IntPtr OpenProcessNative(ProcessAccess access, bool inherit, int pid) {
                 IntPtr hProcess = IntPtr.Zero;
                 ObjectAttributes objectAttributes = default(ObjectAttributes);
-                objectAttributes.Attributes = inherit ? ObjectAttributesFlags.Inherit : 0;
                 objectAttributes.Length = (uint) ObjectAttributes.Size;
                 ClientId clientId = default(ClientId);
                 clientId.UniqueProcess = new IntPtr(pid);
