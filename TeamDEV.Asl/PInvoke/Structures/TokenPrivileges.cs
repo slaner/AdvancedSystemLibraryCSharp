@@ -7,6 +7,7 @@ namespace TeamDEV.Asl.PInvoke.Structures {
         public int Count;
         public Luid Luid;
         public int Attributes;
+
         public static int Size {
             get { return Marshal.SizeOf(typeof(TokenPrivileges)); }
         }
