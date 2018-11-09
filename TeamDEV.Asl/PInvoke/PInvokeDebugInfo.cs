@@ -115,7 +115,7 @@ namespace TeamDEV.Asl.PInvoke {
         private static PInvokeDebugInfo SetupDebugInfo(PInvokeCaptureFilters filter, string moduleName, string pinvokeName, string callerName, object returnValue, params object[] args) {
             PInvokeDebugInfo debugInfo = new PInvokeDebugInfo();
             if (filter.HasFlag(PInvokeCaptureFilters.ModuleName))
-                debugInfo.ModuleName = moduleInfo;
+                debugInfo.ModuleName = moduleName;
             
             if (filter.HasFlag(PInvokeCaptureFilters.PInvokeName))
                 debugInfo.PInvokeName = pinvokeName;
