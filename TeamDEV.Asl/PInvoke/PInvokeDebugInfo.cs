@@ -13,9 +13,7 @@ namespace TeamDEV.Asl.PInvoke {
         /// 
         /// </summary>
         public const string InfoNotTraced = "<NotTraced>";
-
-        private readonly IReadOnlyDictionary<string, object> cachedParametersCollection;
-
+        
         /// <summary>
         /// 
         /// </summary>
