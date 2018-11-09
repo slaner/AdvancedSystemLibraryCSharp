@@ -2,7 +2,7 @@
 using System.Runtime.InteropServices;
 using TeamDEV.Asl.Extensions;
 using TeamDEV.Asl.PInvoke.Enumerations;
-using TeamDEV.Asl.PInvoke.Internal.Methods;
+using TeamDEV.Asl.PInvoke.Modules;
 using TeamDEV.Asl.PInvoke.Structures;
 
 namespace TeamDEV.Asl.PInvoke.Internal {
@@ -24,6 +24,7 @@ namespace TeamDEV.Asl.PInvoke.Internal {
                     return hProcess;
                 return IntPtr.Zero;
             }
+
             public static bool TerminateProcess(int id, int exitCode) {
                 IntPtr hProcess = OpenProcess(ProcessAccess.Terminate, false, id);
                 if (hProcess.IsZero()) return false;
@@ -68,6 +69,8 @@ namespace TeamDEV.Asl.PInvoke.Internal {
                 pInformation.FreeHGlobal();
                 return true;
             }
+
+
         }
     }
 }
