@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace TeamDEV.Asl.PInvoke.Internal.Enumerations {
+namespace TeamDEV.Asl.PInvoke.Enumerations {
     internal enum WaitResult {
         Failed = -1,
         Object = 0,
