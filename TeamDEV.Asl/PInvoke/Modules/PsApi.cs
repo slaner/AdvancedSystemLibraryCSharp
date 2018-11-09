@@ -3,7 +3,7 @@ using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Text;
 
-namespace TeamDEV.Asl.PInvoke.Internal.Methods {
+namespace TeamDEV.Asl.PInvoke.Modules {
     class PsApi {
         public const string ModuleName = nameof(PsApi);
 

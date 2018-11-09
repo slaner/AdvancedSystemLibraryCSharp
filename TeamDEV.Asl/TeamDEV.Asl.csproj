@@ -41,6 +41,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Const.cs" />
     <Compile Include="IIdentifiable.cs" />
     <Compile Include="Extensions\Numeric.cs" />
     <Compile Include="Extensions\Pointer.cs" />
@@ -51,8 +52,8 @@
     <Compile Include="PInvoke\Enumerations\TokenInformationClass.cs" />
     <Compile Include="PInvoke\Enumerations\WaitResult.cs" />
     <Compile Include="PInvoke\FacilityCode.cs" />
-    <Compile Include="PInvoke\Internal\Methods\AdvApi32.cs" />
-    <Compile Include="PInvoke\Internal\Methods\PsApi.cs" />
+    <Compile Include="PInvoke\Modules\AdvApi32.cs" />
+    <Compile Include="PInvoke\Modules\PsApi.cs" />
     <Compile Include="PInvoke\Internal\UncheckedPInvokeHelper.cs" />
     <Compile Include="PInvoke\Internal\UncheckedPInvokeHelper.Process.cs" />
     <Compile Include="PInvoke\ModuleManager.cs" />
@@ -67,8 +68,8 @@
     <Compile Include="PInvoke\Enumerations\ProcessInformationClass.cs" />
     <Compile Include="PInvoke\Enumerations\SnapshotFlags.cs" />
     <Compile Include="PInvoke\Enumerations\SystemInformationClass.cs" />
-    <Compile Include="PInvoke\Internal\Methods\Kernel32.cs" />
-    <Compile Include="PInvoke\Internal\Methods\Ntdll.cs" />
+    <Compile Include="PInvoke\Modules\Kernel32.cs" />
+    <Compile Include="PInvoke\Modules\Ntdll.cs" />
     <Compile Include="PInvoke\NativeHelper.cs" />
     <Compile Include="PInvoke\NtMacro.cs" />
     <Compile Include="PInvoke\PInvokeDebugger.cs" />

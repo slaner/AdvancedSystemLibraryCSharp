@@ -6,7 +6,7 @@ using System.Text;
 
 using TeamDEV.Asl.Extensions;
 using TeamDEV.Asl.PInvoke.Enumerations;
-using TeamDEV.Asl.PInvoke.Internal.Methods;
+using TeamDEV.Asl.PInvoke.Modules;
 
 namespace TeamDEV.Asl.PInvoke {
     /// <summary>

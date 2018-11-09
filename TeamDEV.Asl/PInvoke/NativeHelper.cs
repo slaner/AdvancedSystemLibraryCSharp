@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 using TeamDEV.Asl.Extensions;
 using TeamDEV.Asl.PInvoke.Enumerations;
-using TeamDEV.Asl.PInvoke.Internal.Methods;
+using TeamDEV.Asl.PInvoke.Modules;
 using TeamDEV.Asl.PInvoke.Structures;
 using TeamDEV.Asl.SystemManagements.Process;
 

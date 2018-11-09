@@ -5,7 +5,7 @@ using System.Runtime.InteropServices;
 using TeamDEV.Asl.PInvoke.Enumerations;
 using TeamDEV.Asl.PInvoke.Structures;
 
-namespace TeamDEV.Asl.PInvoke.Internal.Methods {
+namespace TeamDEV.Asl.PInvoke.Modules {
     /// <summary>
     /// 
     /// </summary>

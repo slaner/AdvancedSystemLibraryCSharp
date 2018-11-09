@@ -13,25 +13,23 @@ namespace TeamDEV.Asl.PInvoke {
         /// 
         /// </summary>
         public const string InfoNotTraced = "<NotTraced>";
-
-        private readonly IReadOnlyDictionary<string, object> cachedParametersCollection;
-
+        
         /// <summary>
         /// 
         /// </summary>
-        public string PInvokeName { get; internal set; }
+        public string PInvokeName { get; internal set; } = InfoNotTraced;
         /// <summary>
         /// 
         /// </summary>
-        public string ModuleName { get; internal set; }
+        public string ModuleName { get; internal set; } = InfoNotTraced;
         /// <summary>
         /// 
         /// </summary>
-        public string CallerName { get; internal set; }
+        public string CallerName { get; internal set; } = InfoNotTraced;
         /// <summary>
         /// 
         /// </summary>
-        public object ReturnValue { get; internal set; }
+        public object ReturnValue { get; internal set; } = InfoNotTraced;
         /// <summary>
         /// 
         /// </summary>
@@ -115,17 +113,18 @@ namespace TeamDEV.Asl.PInvoke {
         }
 
         private static PInvokeDebugInfo SetupDebugInfo(PInvokeCaptureFilters filter, string moduleName, string pinvokeName, string callerName, object returnValue, params object[] args) {
-            string moduleInfo = filter.HasFlag(PInvokeCaptureFilters.ModuleName) ? moduleName : InfoNotTraced;
-            string pinvokeInfo = filter.HasFlag(PInvokeCaptureFilters.PInvokeName) ? pinvokeName : InfoNotTraced;
-            string callerInfo = filter.HasFlag(PInvokeCaptureFilters.CallerName) ? callerName : InfoNotTraced;
-            object returnValueInfo = filter.HasFlag(PInvokeCaptureFilters.ReturnValue) ? returnValue : InfoNotTraced;
-
-            PInvokeDebugInfo debugInfo = new PInvokeDebugInfo {
-                ModuleName = moduleInfo,
-                PInvokeName = pinvokeInfo,
-                CallerName = callerInfo,
-                ReturnValue = returnValueInfo
-            };
+            PInvokeDebugInfo debugInfo = new PInvokeDebugInfo();
+            if (filter.HasFlag(PInvokeCaptureFilters.ModuleName))
+                debugInfo.ModuleName = moduleName;
+            
+            if (filter.HasFlag(PInvokeCaptureFilters.PInvokeName))
+                debugInfo.PInvokeName = pinvokeName;
+            
+            if (filter.HasFlag(PInvokeCaptureFilters.CallerName))
+                debugInfo.CallerName = callerName;
+            
+            if (filter.HasFlag(PInvokeCaptureFilters.ReturnValue))
+                debugInfo.ReturnValue = returnValue;
             
             if (filter.HasFlag(PInvokeCaptureFilters.Parameters)) {
                 if (args == null) throw new ArgumentNullException(nameof(args));
