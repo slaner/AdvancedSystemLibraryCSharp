@@ -6,8 +6,7 @@
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="exitCode"></param>
         /// <returns></returns>
-        bool Terminate(int exitCode);
+        bool Terminate();
     }
 }

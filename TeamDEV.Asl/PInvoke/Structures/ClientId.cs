@@ -6,6 +6,7 @@ namespace TeamDEV.Asl.PInvoke.Structures {
     public struct ClientId {
         public IntPtr UniqueProcess;
         public IntPtr UniqueThread;
+
         public static int Size {
             get { return Marshal.SizeOf(typeof(ClientId)); }
         }

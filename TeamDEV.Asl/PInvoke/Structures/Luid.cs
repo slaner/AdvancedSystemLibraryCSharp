@@ -5,6 +5,7 @@ namespace TeamDEV.Asl.PInvoke.Structures {
     public struct Luid {
         public uint Low;
         public int High;
+
         public static int Size {
             get { return Marshal.SizeOf(typeof(Luid)); }
         }

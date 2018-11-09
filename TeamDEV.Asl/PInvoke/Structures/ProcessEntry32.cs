@@ -16,6 +16,7 @@ namespace TeamDEV.Asl.PInvoke.Structures {
         public uint dwFlags;
         [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 260)]
         public string szExeFile;
+
         public static int Size {
             get { return Marshal.SizeOf(typeof(ProcessEntry32)); }
         }
