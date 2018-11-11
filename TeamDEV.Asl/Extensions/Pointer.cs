@@ -7,6 +7,9 @@ using System.Threading.Tasks;
 
 namespace TeamDEV.Asl.Extensions {
     static class Pointer {
+        public static bool IsValid(this IntPtr p) {
+            return p.ToInt64() >= 0;
+        }
         public static bool IsZero(this IntPtr p) {
             return p == IntPtr.Zero;
         }
