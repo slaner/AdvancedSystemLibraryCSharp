@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TeamDEV.Asl.PInvoke;
+using TeamDEV.Asl.PInvoke.Structures;
 
 namespace TeamDEV.Asl.Test.Console {
     class Program {
@@ -12,9 +13,15 @@ namespace TeamDEV.Asl.Test.Console {
             PInvokeDebugger.CaptureFilters = PInvokeCaptureFilters.CaptureAll;
             PInvokeDebugger.TraceListener.Writer = System.Console.Out;
             PInvokeDebugger.PInvokeCaptured += OnPInvokeCaptured;
-            var entries = NativeHelper.GetProcessEntries();
-            System.Console.WriteLine("Entries: {0}", entries.Length);
-            while (true) { }
+            // var entries = NativeHelper.GetProcessEntries();
+            // System.Console.WriteLine("Entries: {0}", entries.Length);
+
+            // PEB TEST
+            ProcessEnvironmentBlock peb;
+
+            NativeHelper.GetProcessPEB(13472, out peb);
+
+            System.Console.ReadKey(true);
         }
         private static void OnPInvokeCaptured(PInvokeDebugInfo debugInfo) {
             PInvokeDebugger.TraceListener.WriteLine($"Captured PInvoke Information");
