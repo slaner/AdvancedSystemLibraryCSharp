@@ -90,10 +90,10 @@
     <Compile Include="PInvoke\Enumerations\TokenInformationClass.cs" />
     <Compile Include="PInvoke\Enumerations\WaitResult.cs" />
     <Compile Include="PInvoke\FacilityCode.cs" />
+    <Compile Include="PInvoke\Internal\PInvokeHelper.cs" />
+    <Compile Include="PInvoke\Internal\PInvokeHelper.Process.cs" />
     <Compile Include="PInvoke\Modules\AdvApi32.cs" />
     <Compile Include="PInvoke\Modules\PsApi.cs" />
-    <Compile Include="PInvoke\Internal\UncheckedPInvokeHelper.cs" />
-    <Compile Include="PInvoke\Internal\UncheckedPInvokeHelper.Process.cs" />
     <Compile Include="PInvoke\ModuleManager.cs" />
     <Compile Include="PInvoke\Enumerations\AccessMask.cs" />
     <Compile Include="PInvoke\Enumerations\FormatMessageFlags.cs" />
@@ -139,6 +139,7 @@
     <Compile Include="SystemManagements\Process\Process.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SystemManagements\Process\ProcessEntry.cs" />
+    <Compile Include="Utilities\ObjectInspector.cs" />
     <Compile Include="Utilities\StringUtilities.cs" />
   </ItemGroup>
   <ItemGroup />

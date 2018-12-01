@@ -6,10 +6,10 @@ using TeamDEV.Asl.PInvoke.Modules;
 using TeamDEV.Asl.PInvoke.Structures;
 
 namespace TeamDEV.Asl.PInvoke.Internal {
-    static partial class UncheckedPInvokeHelper {
-        public static partial class Process {
+    static partial class PInvokeHelper {
+        public static class Process {
             public static IntPtr OpenProcess(ProcessAccess access, bool inherit, int pid) {
-                return Kernel32.PInvoke_OpenProcess(access, inherit, pid);
+                return Kernel32.OpenProcess(access, inherit, pid);
             }
             public static IntPtr OpenProcessNative(ProcessAccess access, bool inherit, int pid) {
                 IntPtr hProcess = IntPtr.Zero;
@@ -19,7 +19,7 @@ namespace TeamDEV.Asl.PInvoke.Internal {
                 ClientId clientId = default(ClientId);
                 clientId.UniqueProcess = new IntPtr(pid);
 
-                NTSTATUS result = Ntdll.PInvoke_NtOpenProcess(ref hProcess, access, ref objectAttributes, ref clientId);
+                NTSTATUS result = Ntdll.NtOpenProcess(ref hProcess, access, ref objectAttributes, ref clientId);
                 if (result.IsSuccess())
                     return hProcess;
                 return IntPtr.Zero;
@@ -29,16 +29,16 @@ namespace TeamDEV.Asl.PInvoke.Internal {
                 IntPtr hProcess = OpenProcess(ProcessAccess.Terminate, false, id);
                 if (hProcess.IsZero()) return false;
 
-                bool result = Kernel32.PInvoke_TerminateProcess(hProcess, exitCode);
-                Kernel32.PInvoke_CloseHandle(hProcess);
+                bool result = Kernel32.TerminateProcess(hProcess, exitCode);
+                Kernel32.CloseHandle(hProcess);
                 return result;
             }
             public static bool TerminateProcessNative(int id, NTSTATUS exitStatus) {
                 IntPtr hProcess = OpenProcess(ProcessAccess.Terminate, false, id);
                 if (hProcess == IntPtr.Zero) return false;
 
-                NTSTATUS result = Ntdll.PInvoke_NtTerminateProcess(hProcess, exitStatus);
-                Ntdll.PInvoke_NtClose(hProcess);
+                NTSTATUS result = Ntdll.NtTerminateProcess(hProcess, exitStatus);
+                Ntdll.NtClose(hProcess);
                 return result.IsSuccess();
             }
 
@@ -52,23 +52,23 @@ namespace TeamDEV.Asl.PInvoke.Internal {
 
                 IntPtr pInformation = Marshal.AllocHGlobal(ProcessBasicInformation.Size);
                 if (pInformation.IsZero()) {
-                    NtCloseIfTrue(hProcess, closeHandle);
+                    CloseIf(hProcess, closeHandle);
                     return false;
                 }
 
-                NTSTATUS status = Ntdll.PInvoke_NtQueryInformationProcess(hProcess, ProcessInformationClass.ProcessBasicInformation, pInformation, (uint) ProcessBasicInformation.Size, out uint returnLength);
+                NTSTATUS status = Ntdll.NtQueryInformationProcess(hProcess, ProcessInformationClass.ProcessBasicInformation, pInformation, (uint) ProcessBasicInformation.Size, out uint returnLength);
                 if (!status.IsSuccess()) {
-                    NtCloseIfTrue(hProcess, closeHandle);
+                    CloseIf(hProcess, closeHandle);
                     pInformation.FreeHGlobal();
                     return false;
                 }
 
                 basicInformation = pInformation.To<ProcessBasicInformation>();
-                NtCloseIfTrue(hProcess, closeHandle);
+                CloseIf(hProcess, closeHandle);
                 pInformation.FreeHGlobal();
                 return true;
             }
-            
+
             public static bool GetProcessExtendedBasicInformation(int id, out ProcessExtendedBasicInformation extendedBasicInformation) {
                 IntPtr hProcess = OpenProcessNative(ProcessAccess.QueryInformation, false, id);
                 return GetProcessExtendedBasicInformation(hProcess, out extendedBasicInformation, true);
@@ -76,24 +76,24 @@ namespace TeamDEV.Asl.PInvoke.Internal {
             public static bool GetProcessExtendedBasicInformation(IntPtr hProcess, out ProcessExtendedBasicInformation extendedBasicInformation, bool closeHandle = false) {
                 extendedBasicInformation = default(ProcessExtendedBasicInformation);
                 extendedBasicInformation.dwSize = ProcessExtendedBasicInformation.Size;
-                
+
                 if (hProcess.IsZero()) return false;
 
                 IntPtr pInformation = Marshal.AllocHGlobal(ProcessExtendedBasicInformation.Size);
                 if (pInformation.IsZero()) {
-                    NtCloseIfTrue(hProcess, closeHandle);
+                    CloseIf(hProcess, closeHandle);
                     return false;
                 }
 
-                NTSTATUS status = Ntdll.PInvoke_NtQueryInformationProcess(hProcess, ProcessInformationClass.ProcessBasicInformation, pInformation, (uint) ProcessExtendedBasicInformation.Size, out uint returnLength);
+                NTSTATUS status = Ntdll.NtQueryInformationProcess(hProcess, ProcessInformationClass.ProcessBasicInformation, pInformation, (uint) ProcessExtendedBasicInformation.Size, out uint returnLength);
                 if (!status.IsSuccess()) {
-                    NtCloseIfTrue(hProcess, closeHandle);
+                    CloseIf(hProcess, closeHandle);
                     pInformation.FreeHGlobal();
                     return false;
                 }
 
                 extendedBasicInformation = pInformation.To<ProcessExtendedBasicInformation>();
-                NtCloseIfTrue(hProcess, closeHandle);
+                CloseIf(hProcess, closeHandle);
                 pInformation.FreeHGlobal();
                 return true;
             }
@@ -105,9 +105,9 @@ namespace TeamDEV.Asl.PInvoke.Internal {
             public static bool GetProcessPEB(IntPtr hProcess, out ProcessEnvironmentBlock peb, bool closeHandle = false) {
                 peb = default(ProcessEnvironmentBlock);
                 if (!hProcess.IsValid()) return false;
-                
+
                 if (!GetProcessBasicInformation(hProcess, out ProcessBasicInformation pbi)) {
-                    NtCloseIfTrue(hProcess, closeHandle);
+                    CloseIf(hProcess, closeHandle);
                     return false;
                 }
 
@@ -118,22 +118,22 @@ namespace TeamDEV.Asl.PInvoke.Internal {
                 if (!hProcess.IsValid()) return false;
 
                 if (!pbi.PebBaseAddress.IsValid()) {
-                    NtCloseIfTrue(hProcess, closeHandle);
+                    CloseIf(hProcess, closeHandle);
                     return false;
                 }
 
                 bool result = PtrToStructure(hProcess, pbi.PebBaseAddress, out peb);
-                NtCloseIfTrue(hProcess, closeHandle);
+                CloseIf(hProcess, closeHandle);
                 return result;
             }
-
-            public static bool PtrToStructure<T>(IntPtr hProcess, IntPtr baseAddress, out T structure) where T: struct {
+            
+            public static bool PtrToStructure<T>(IntPtr hProcess, IntPtr baseAddress, out T structure) where T : struct {
                 structure = default(T);
 
                 if (!hProcess.IsValid() || !baseAddress.IsValid()) return false;
 
                 uint length = (uint) Marshal.SizeOf(typeof(T));
-                if (ReadProcessVirtualMemoryFast(hProcess, baseAddress, ref length, out IntPtr pStruct)) {
+                if (ReadMemory(hProcess, baseAddress, ref length, out IntPtr pStruct)) {
                     structure = pStruct.To<T>();
                     pStruct.FreeHGlobal();
                     return true;
@@ -141,11 +141,10 @@ namespace TeamDEV.Asl.PInvoke.Internal {
 
                 return false;
             }
-
-
-            static Boolean ReadProcessVirtualMemoryFast(IntPtr hProcess, IntPtr baseAddress, ref UInt32 size, out IntPtr processMemory) {
+            public static bool ReadMemory(IntPtr hProcess, IntPtr baseAddress, ref uint size, out IntPtr processMemory) {
                 processMemory = Marshal.AllocHGlobal((Int32) size);
-                UInt32 readBytes = 0;
+
+                uint readBytes;
                 NTSTATUS status = 0;
                 MemoryProtections oldProtect = 0;
 

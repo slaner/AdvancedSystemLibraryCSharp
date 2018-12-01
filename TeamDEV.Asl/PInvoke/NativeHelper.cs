@@ -32,7 +32,7 @@ namespace TeamDEV.Asl.PInvoke {
         }
 
         public static bool GetProcessPEB(int id, out ProcessEnvironmentBlock peb) {
-            return UncheckedPInvokeHelper.Process.GetProcessPEB(id, out peb);
+            return PInvokeHelper.Process.GetProcessPEB(id, out peb);
         }
     }
 }
