@@ -3,6 +3,7 @@ using System.Collections.Generic;
 
 using TeamDEV.Asl.Extensions;
 using TeamDEV.Asl.PInvoke.Enumerations;
+using TeamDEV.Asl.PInvoke.Internal;
 using TeamDEV.Asl.PInvoke.Modules;
 using TeamDEV.Asl.PInvoke.Structures;
 using TeamDEV.Asl.SystemManagements.Process;
@@ -28,6 +29,10 @@ namespace TeamDEV.Asl.PInvoke {
 
             Kernel32.CloseHandle(hSnapshot);
             return processEntries.ToArray();
+        }
+
+        public static bool GetProcessPEB(int id, out ProcessEnvironmentBlock peb) {
+            return PInvokeHelper.Process.GetProcessPEB(id, out peb);
         }
     }
 }

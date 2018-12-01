@@ -96,7 +96,7 @@ namespace TeamDEV.Asl.PInvoke {
 
                 if (status.IsError() || status.IsWarning()) {
                     if (filter.HasFlag(PInvokeCaptureFilters.ErrorCode)) debugInfo.ErrorCode = (int) status;
-                    if (filter.HasFlag(PInvokeCaptureFilters.ErrorDescription)) debugInfo.ErrorDescription = PInvokeDebugger.TranslateError((int) returnValue, ModuleManager.NtDll);
+                    if (filter.HasFlag(PInvokeCaptureFilters.ErrorDescription)) debugInfo.ErrorDescription = PInvokeDebugger.TranslateError((int) status, ModuleManager.NtDll);
                     debugInfo.IsWarning = status.IsWarning();
                     debugInfo.IsError = status.IsError();
                 }
