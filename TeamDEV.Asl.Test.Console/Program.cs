@@ -18,6 +18,14 @@ namespace TeamDEV.Asl.Test.Console {
             var processEntries = NativeHelper.GetProcessEntries();
             ObjectInspector.Inspect(processEntries[0]);
 
+            object f;
+            int k = 0;
+            f = k;
+
+            if (f == null) {
+                f.ToString();
+            }
+
             System.Console.ReadKey(true);
         }
         private static void OnPInvokeCaptured(PInvokeDebugInfo debugInfo) {

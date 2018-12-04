@@ -25,13 +25,13 @@ namespace TeamDEV.Asl.PInvoke.Internal {
         public static string GetWindowsDirectory() {
             StringBuilder sbDirectory = new StringBuilder(0x100);
             int charsCopied = Kernel32.GetWindowsDirectory(sbDirectory, sbDirectory.Capacity);
-            if (charsCopied <= 0) return Const.UnknownString;
+            if (charsCopied <= 0) return Const.Unknown;
             return sbDirectory.ToString();
         }
         public static string GetSystemDirectory() {
             StringBuilder sbDirectory = new StringBuilder(0x100);
             int charsCopied = Kernel32.GetSystemDirectory(sbDirectory, sbDirectory.Capacity);
-            if (charsCopied <= 0) return Const.UnknownString;
+            if (charsCopied <= 0) return Const.Unknown;
             return sbDirectory.ToString();
         }
     }

@@ -80,6 +80,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Const.cs" />
+    <Compile Include="Extensions\Collection.cs" />
     <Compile Include="IIdentifiable.cs" />
     <Compile Include="Extensions\Numeric.cs" />
     <Compile Include="Extensions\Pointer.cs" />
