@@ -22,6 +22,8 @@ namespace TeamDEV.Asl {
 
             { nameof(String), typeof(String) },
 
+            { nameof(Boolean), typeof(Boolean) },
+
             { nameof(IntPtr), typeof(IntPtr) },
             { nameof(UIntPtr), typeof(UIntPtr) },
 
