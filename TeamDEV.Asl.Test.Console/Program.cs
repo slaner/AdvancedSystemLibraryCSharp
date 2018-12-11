@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -10,22 +11,16 @@ using TeamDEV.Asl.Utilities;
 namespace TeamDEV.Asl.Test.Console {
     class Program {
         static void Main(string[] args) {
-            PInvokeDebugger.LoggingEnabled = true;
+            PInvokeDebugger.LoggingEnabled = false;
             PInvokeDebugger.CaptureFilters = PInvokeCaptureFilters.CaptureAll;
             PInvokeDebugger.TraceListener.Writer = System.Console.Out;
             PInvokeDebugger.PInvokeCaptured += OnPInvokeCaptured;
 
             var processEntries = NativeHelper.GetProcessEntries();
-            ObjectInspector.Inspect(processEntries[0]);
-
-            object f;
-            int k = 0;
-            f = k;
-
-            if (f == null) {
-                f.ToString();
-            }
-
+            //Process p = Process.GetProcessById(11484);
+            string p = "Hello";
+            ObjectInspector.Inspect(p);
+            
             System.Console.ReadKey(true);
         }
         private static void OnPInvokeCaptured(PInvokeDebugInfo debugInfo) {

@@ -27,49 +27,71 @@ namespace TeamDEV.Asl.Utilities {
         /// <param name="instance"></param>
         /// <param name="bindingFlags"></param>
         public static void Inspect<T>(T instance, BindingFlags bindingFlags) {
-            // check if given parameter is default value
-            if (instance.Equals(default(T))) return;
-
             // Get type from type parameter
             Type targetType = typeof(T);
 
             // StringBuilder instance for fastest text operation
-            StringBuilder buffer = new StringBuilder();
+            TraceBuffer buffer = new TraceBuffer();
 
-            // Inspect fields
+            // Inspect Methods
+            InspectMethods(buffer, instance, targetType, bindingFlags);
+
+            // Inspect Fields
             InspectFields(buffer, instance, targetType, bindingFlags);
-            InspectProperties(buffer, instance, targetType, bindingFlags);
+            //InspectProperties(buffer, instance, targetType, bindingFlags);
 
 
-            InspectMembers(buffer, instance, targetType, bindingFlags);
+            //InspectMembers(buffer, instance, targetType, bindingFlags);
 
             Console.WriteLine(buffer.ToString());
         }
 
-        private static void InspectFields<T>(StringBuilder buffer, T instance, Type type, BindingFlags bindingFlags) {
-            // HEADER
-            buffer.AppendLine($"<{Const.Field}>");
+        private static void InspectMethods<T>(TraceBuffer buffer, T instance, Type type, BindingFlags bindingFlags) {
+            buffer.AppendLine($"<{Const.Method}>");
+            buffer.Indent();
 
-            var fields = type.GetFields(bindingFlags);
-            if (fields.IsEmpty()) {
-                buffer.AppendLine($"  {Const.Empty}");
+            var methods = type.GetMethods(bindingFlags);
+            if (methods.IsEmpty()) {
+                buffer.AppendLine(Const.Empty);
+                buffer.Unindent();
                 return;
             }
 
+            foreach (var method in methods) {
+                BuildMethodDefinition(buffer, method);
+            }
+
+            buffer.AppendLine();
+            buffer.Unindent();
+        }
+
+        private static void InspectFields<T>(TraceBuffer buffer, T instance, Type type, BindingFlags bindingFlags) {
+            buffer.AppendLine($"<{Const.Field}>");
+            buffer.Indent();
+
+            var fields = type.GetFields(bindingFlags);
+            if (fields.IsEmpty()) {
+                buffer.AppendLine(Const.Empty);
+                buffer.Unindent();
+                return;
+            }
+
+            bool isValueType = typeof(T).IsValueType;
+            bool isDefault = Equals(default(T), instance);
+
             foreach (var field in fields) {
-                Type fieldType = field.FieldType;
+                buffer.Append($"{field.FieldType} {field.Name}", true);
 
-
-                if (fieldType.IsAtomicType()) {
-
-                }
                 object value = field.GetValue(instance);
-
-                if (field.FieldType.IsAtomicType()) {
-                    buffer.AppendLine($"  {field.FieldType} {field.Name} = {field.GetValue(instance)}");
-                } else {
-                    buffer.AppendLine($"  {field.FieldType} {field.Name}");
+                if (field.FieldType.IsAtomicType())
+                    buffer.Append($" = {value}");
+                else {
+                    if (value != null) {
+                        buffer.Append($" = {value}");
+                    } else buffer.Append(" = null");
                 }
+
+                buffer.AppendLineNoIndent();
             }
         }
 
@@ -109,6 +131,30 @@ namespace TeamDEV.Asl.Utilities {
 
 
 
+        private static void BuildMethodDefinition(TraceBuffer buffer, MethodInfo method) {
+            buffer.Append($"{method.ReturnType} {method.Name}(", true);
+            var parameters = method.GetParameters();
+            if (parameters.Length == 0) {
+                buffer.AppendLine($")", false);
+                return;
+            }
+
+            int i;
+            for (i = 0; i < parameters.Length - 1; i++) {
+                var parameter = parameters[i];
+                BuildMethodParameterDefinition(buffer, parameter);
+                buffer.Append(", ");
+            }
+
+            BuildMethodParameterDefinition(buffer, parameters[i]);
+            buffer.AppendLine(")", false);
+        }
+        private static void BuildMethodParameterDefinition(TraceBuffer buffer, ParameterInfo parameter) {
+            if (parameter.IsOptional) buffer.Append("[optional] ");
+            if (parameter.IsOut) buffer.Append("[out] ");
+            if (parameter.IsRetval) buffer.Append("[retval] ");
+            buffer.Append($"{parameter.ParameterType} {parameter.Name}");
+        }
         private static bool IsAtomicType(this Type t) {
             return Const.AtomicTypes.ContainsKey(t.Name) && (t == Const.AtomicTypes[t.Name]);
         }

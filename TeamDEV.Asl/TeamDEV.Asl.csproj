@@ -142,6 +142,7 @@
     <Compile Include="SystemManagements\Process\ProcessEntry.cs" />
     <Compile Include="Utilities\ObjectInspector.cs" />
     <Compile Include="Utilities\StringUtilities.cs" />
+    <Compile Include="Utilities\TraceBuffer.cs" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
