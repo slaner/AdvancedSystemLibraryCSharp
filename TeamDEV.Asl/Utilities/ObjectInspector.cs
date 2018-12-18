@@ -27,133 +27,102 @@ namespace TeamDEV.Asl.Utilities {
         /// <param name="instance"></param>
         /// <param name="bindingFlags"></param>
         public static void Inspect<T>(T instance, BindingFlags bindingFlags) {
-            // Get type from type parameter
-            Type targetType = typeof(T);
-
-            // StringBuilder instance for fastest text operation
             TraceBuffer buffer = new TraceBuffer();
-
-            // Inspect Methods
-            InspectMethods(buffer, instance, targetType, bindingFlags);
-
-            // Inspect Fields
-            InspectFields(buffer, instance, targetType, bindingFlags);
-            //InspectProperties(buffer, instance, targetType, bindingFlags);
-
-
-            //InspectMembers(buffer, instance, targetType, bindingFlags);
-
+            InspectInternal(instance, typeof(T), bindingFlags, buffer);
             Console.WriteLine(buffer.ToString());
         }
 
-        private static void InspectMethods<T>(TraceBuffer buffer, T instance, Type type, BindingFlags bindingFlags) {
-            buffer.AppendLine($"<{Const.Method}>");
-            buffer.Indent();
-
-            var methods = type.GetMethods(bindingFlags);
-            if (methods.IsEmpty()) {
-                buffer.AppendLine(Const.Empty);
-                buffer.Unindent();
+        private static void InspectInternal(object instance, Type type, BindingFlags bindingFlags, TraceBuffer buffer) {
+            // if type is atomic type, we'll just print it
+            if (type.IsAtomicType()) {
+                Console.WriteLine(instance);
                 return;
             }
 
-            foreach (var method in methods) {
-                BuildMethodDefinition(buffer, method);
-            }
-
-            buffer.AppendLine();
-            buffer.Unindent();
+            // if type is not value type and it is default(null), exit
+            if (!type.IsValueType && IsDefault(instance)) return;
+            
+            // Inspect members
+            InspectMembers(buffer, instance, type, bindingFlags);
         }
+        
+        private static void InspectField<T>(TraceBuffer buffer, FieldInfo field, T instance, BindingFlags bindingFlags) {
+            buffer.Append($"{field.FieldType} {field.Name}", true);
 
-        private static void InspectFields<T>(TraceBuffer buffer, T instance, Type type, BindingFlags bindingFlags) {
-            buffer.AppendLine($"<{Const.Field}>");
-            buffer.Indent();
+            object value = GetFieldValue(field, instance);
 
-            var fields = type.GetFields(bindingFlags);
-            if (fields.IsEmpty()) {
-                buffer.AppendLine(Const.Empty);
-                buffer.Unindent();
-                return;
-            }
-
-            bool isValueType = typeof(T).IsValueType;
-            bool isDefault = Equals(default(T), instance);
-
-            foreach (var field in fields) {
-                buffer.Append($"{field.FieldType} {field.Name}", true);
-
-                object value = field.GetValue(instance);
-                if (field.FieldType.IsAtomicType())
-                    buffer.Append($" = {value}");
-                else {
-                    if (value != null) {
-                        buffer.Append($" = {value}");
-                    } else buffer.Append(" = null");
-                }
-
+            // We'll trace it's value if atomic type (primitive types and string)
+            if (field.FieldType.IsAtomicType())
+                buffer.AppendLine($" = {value}", false);
+            
+            else {
                 buffer.AppendLineNoIndent();
+                InspectInternal(value, field.FieldType, bindingFlags, buffer);
+            }
+        }
+        private static void InspectProperty<T>(TraceBuffer buffer, PropertyInfo property, T instance, BindingFlags bindingFlags) {
+            // If there's no getter on this property,
+            // abort tracing
+            if (!property.CanRead) return;
+
+            // Check binding flag
+            MethodInfo method = property.GetMethod;
+            if (!method.IsPublic && !bindingFlags.HasFlag(BindingFlags.NonPublic)) return;
+
+            // If property takes parameter,
+            // abort tracing
+            if (!method.GetParameters().IsEmpty()) return;
+            
+            buffer.Append($"{property.PropertyType} {property.Name}", true);
+            object value = GetMethodValue(method, instance);
+
+            // We'll trace it's value if atomic type (primitive types and string)
+            if (property.PropertyType.IsAtomicType())
+                buffer.AppendLine($" = {value}", false);
+
+            else {
+                if (value == null) buffer.Append(" = null");
+                else {
+                    buffer.AppendLineNoIndent();
+                    InspectInternal(value, property.PropertyType, bindingFlags, buffer);
+                }
             }
         }
 
-        private static void InspectProperties<T>(StringBuilder buffer, T instance, Type type, BindingFlags bindingFlags) {
-            // HEADER
-            buffer.AppendLine($"<{Const.Property}>");
-
-            var properties = type.GetProperties(bindingFlags);
-            if (properties.IsEmpty()) {
-                buffer.AppendLine($"  {Const.Empty}");
-                return;
-            }
-
-            foreach (var property in properties) {
-                buffer.AppendLine($"  {property.PropertyType} {property.Name} = {property.GetValue(instance)}");
-            }
-        }
-
-
-
-        private static void InspectMembers<T>(StringBuilder buffer, T instance, Type type, BindingFlags bindingFlags) {
-            // HEADER
-            buffer.AppendLine("<Members>");
+        private static void InspectMembers<T>(TraceBuffer buffer, T instance, Type type, BindingFlags bindingFlags) {
+            buffer.AppendLine(type.Name);
+            buffer.Indent();
 
             var members = type.GetMembers();
-            if (members.Count() == 0) {
-                buffer.AppendLine("  None");
+            if (members.IsEmpty()) {
+                buffer.AppendLine(Const.Empty);
+                buffer.Unindent();
                 return;
             }
 
             foreach (var member in members) {
-                object value = null;
+                if (member.MemberType.HasFlag(MemberTypes.Field)) {
+                    InspectField(buffer, member as FieldInfo, instance, bindingFlags);
+                }
 
-                buffer.AppendLine($"  [{member.MemberType}] {member.ReflectedType.Name} {member.Name}: ");
+                if (member.MemberType.HasFlag(MemberTypes.Property)) {
+                    InspectProperty(buffer, member as PropertyInfo, instance, bindingFlags);
+                }
             }
+            buffer.Unindent();
         }
 
-
-
-        private static void BuildMethodDefinition(TraceBuffer buffer, MethodInfo method) {
-            buffer.Append($"{method.ReturnType} {method.Name}(", true);
-            var parameters = method.GetParameters();
-            if (parameters.Length == 0) {
-                buffer.AppendLine($")", false);
-                return;
-            }
-
-            int i;
-            for (i = 0; i < parameters.Length - 1; i++) {
-                var parameter = parameters[i];
-                BuildMethodParameterDefinition(buffer, parameter);
-                buffer.Append(", ");
-            }
-
-            BuildMethodParameterDefinition(buffer, parameters[i]);
-            buffer.AppendLine(")", false);
+        
+        private static object GetMethodValue(MethodInfo method, object instance = null) {
+            if (method.IsStatic && instance != null) instance = null;
+            return method.Invoke(instance, null);
         }
-        private static void BuildMethodParameterDefinition(TraceBuffer buffer, ParameterInfo parameter) {
-            if (parameter.IsOptional) buffer.Append("[optional] ");
-            if (parameter.IsOut) buffer.Append("[out] ");
-            if (parameter.IsRetval) buffer.Append("[retval] ");
-            buffer.Append($"{parameter.ParameterType} {parameter.Name}");
+        private static bool IsDefault<T>(T value) {
+            return Equals(value, default(T));
+        }
+        private static object GetFieldValue(FieldInfo field, object instance = null) {
+            if (field.IsStatic && instance != null) instance = null;
+            return field.GetValue(instance);
         }
         private static bool IsAtomicType(this Type t) {
             return Const.AtomicTypes.ContainsKey(t.Name) && (t == Const.AtomicTypes[t.Name]);

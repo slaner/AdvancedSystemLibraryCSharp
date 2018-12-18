@@ -10,6 +10,12 @@ using TeamDEV.Asl.Utilities;
 
 namespace TeamDEV.Asl.Test.Console {
     class Program {
+        class test {
+            public int aaf {
+                get { return 0; }
+                private set { }
+            }
+        }
         static void Main(string[] args) {
             PInvokeDebugger.LoggingEnabled = false;
             PInvokeDebugger.CaptureFilters = PInvokeCaptureFilters.CaptureAll;
@@ -17,9 +23,10 @@ namespace TeamDEV.Asl.Test.Console {
             PInvokeDebugger.PInvokeCaptured += OnPInvokeCaptured;
 
             var processEntries = NativeHelper.GetProcessEntries();
-            //Process p = Process.GetProcessById(11484);
-            string p = "Hello";
-            ObjectInspector.Inspect(p);
+            Process p = Process.GetProcessById(0);
+            // string p = "Hello";
+            ProcessEnvironmentBlock peb = default(ProcessEnvironmentBlock);
+            ObjectInspector.Inspect(peb);
             
             System.Console.ReadKey(true);
         }
