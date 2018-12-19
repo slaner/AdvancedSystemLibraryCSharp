@@ -26,7 +26,7 @@ namespace TeamDEV.Asl.Test.Console {
             Process p = Process.GetProcessById(0);
             // string p = "Hello";
             ProcessEnvironmentBlock peb = default(ProcessEnvironmentBlock);
-            ObjectInspector.Inspect(peb);
+            ObjectInspector.Inspect(p, ' ', 2);
             
             System.Console.ReadKey(true);
         }
