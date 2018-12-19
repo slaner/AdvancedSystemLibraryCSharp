@@ -32,6 +32,7 @@ namespace TeamDEV.Asl {
         #endregion
 
 
+        public const string String = nameof(System.String);
         public const string Empty = nameof(Empty);
         public const string Field = nameof(Field);
         public const string Method = nameof(Method);

@@ -6,9 +6,9 @@ namespace TeamDEV.Asl.Utilities {
     /// Indentable text buffer
     /// </summary>
     internal class TraceBuffer {
-        private const int DefaultIndentSize = 4;
-        private const char DefaultIndentChar = ' ';
-        private const string DefaultIndentString = "    ";
+        public const int DefaultIndentSize = 4;
+        public const char DefaultIndentChar = ' ';
+        public const string DefaultIndentString = "    ";
 
         private StringBuilder mText = new StringBuilder();
         private int mIndentLevel = 0;
@@ -16,6 +16,14 @@ namespace TeamDEV.Asl.Utilities {
         private char mIndentChar = DefaultIndentChar;
         private string mIndentCache = DefaultIndentString;
         private bool mCacheEmpty = true;
+
+        public TraceBuffer() : this(DefaultIndentChar, DefaultIndentSize) { }
+        public TraceBuffer(int indentSize) : this(DefaultIndentChar, indentSize) { }
+        public TraceBuffer(char indentChar, int indentSize) {
+            mIndentChar = indentChar;
+            mIndentSize = indentSize;
+            UpdateIndentCache();
+        }
 
         public void Append(byte value) {
             Append(value.ToString());

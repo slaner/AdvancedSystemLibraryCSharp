@@ -16,8 +16,8 @@ namespace TeamDEV.Asl.Utilities {
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="instance"></param>
-        public static void Inspect<T>(T instance) {
-            Inspect(instance, BindingFlags.Public | BindingFlags.Instance);
+        public static void Inspect<T>(T instance, char indentChar = TraceBuffer.DefaultIndentChar, int indentSize = TraceBuffer.DefaultIndentSize) {
+            Inspect(instance, BindingFlags.Public | BindingFlags.Instance, indentChar, indentSize);
         }
 
         /// <summary>
@@ -26,9 +26,11 @@ namespace TeamDEV.Asl.Utilities {
         /// <typeparam name="T"></typeparam>
         /// <param name="instance"></param>
         /// <param name="bindingFlags"></param>
-        public static void Inspect<T>(T instance, BindingFlags bindingFlags) {
-            TraceBuffer buffer = new TraceBuffer();
-            InspectInternal(instance, typeof(T), bindingFlags, buffer);
+        public static void Inspect<T>(T instance, BindingFlags bindingFlags, char indentChar = TraceBuffer.DefaultIndentChar, int indentSize = TraceBuffer.DefaultIndentSize) {
+            TraceBuffer buffer = new TraceBuffer(indentChar, indentSize);
+            Type type = typeof(T);
+            buffer.AppendLine(type.Name, false);
+            InspectInternal(instance, type, bindingFlags, buffer);
             Console.WriteLine(buffer.ToString());
         }
 
@@ -45,20 +47,24 @@ namespace TeamDEV.Asl.Utilities {
             // Inspect members
             InspectMembers(buffer, instance, type, bindingFlags);
         }
+
+        private static void TraceMemberInfo(TraceBuffer buffer, MemberInfo memberInfo, Type type, object value, BindingFlags bindingFlags) {
+            buffer.Append($"{type.Name} {memberInfo.Name}", true);
+            if (type.IsAtomicType()) {
+                if (type.IsStringType()) value = $"\"{value}\"";
+                buffer.AppendLine($" = {value}", false);
+            } else {
+                if (value == null) buffer.AppendLine(" = null", false);
+                else {
+                    buffer.AppendLineNoIndent();
+                    InspectInternal(value, type, bindingFlags, buffer);
+                }
+            }
+        }
         
         private static void InspectField<T>(TraceBuffer buffer, FieldInfo field, T instance, BindingFlags bindingFlags) {
-            buffer.Append($"{field.FieldType} {field.Name}", true);
-
             object value = GetFieldValue(field, instance);
-
-            // We'll trace it's value if atomic type (primitive types and string)
-            if (field.FieldType.IsAtomicType())
-                buffer.AppendLine($" = {value}", false);
-            
-            else {
-                buffer.AppendLineNoIndent();
-                InspectInternal(value, field.FieldType, bindingFlags, buffer);
-            }
+            TraceMemberInfo(buffer, field, field.FieldType, value, bindingFlags);
         }
         private static void InspectProperty<T>(TraceBuffer buffer, PropertyInfo property, T instance, BindingFlags bindingFlags) {
             // If there's no getter on this property,
@@ -72,25 +78,12 @@ namespace TeamDEV.Asl.Utilities {
             // If property takes parameter,
             // abort tracing
             if (!method.GetParameters().IsEmpty()) return;
-            
-            buffer.Append($"{property.PropertyType} {property.Name}", true);
+
             object value = GetMethodValue(method, instance);
-
-            // We'll trace it's value if atomic type (primitive types and string)
-            if (property.PropertyType.IsAtomicType())
-                buffer.AppendLine($" = {value}", false);
-
-            else {
-                if (value == null) buffer.Append(" = null");
-                else {
-                    buffer.AppendLineNoIndent();
-                    InspectInternal(value, property.PropertyType, bindingFlags, buffer);
-                }
-            }
+            TraceMemberInfo(buffer, property, property.PropertyType, value, bindingFlags);
         }
 
         private static void InspectMembers<T>(TraceBuffer buffer, T instance, Type type, BindingFlags bindingFlags) {
-            buffer.AppendLine(type.Name);
             buffer.Indent();
 
             var members = type.GetMembers();
@@ -114,18 +107,19 @@ namespace TeamDEV.Asl.Utilities {
 
         
         private static object GetMethodValue(MethodInfo method, object instance = null) {
-            if (method.IsStatic && instance != null) instance = null;
-            return method.Invoke(instance, null);
+            object value;
+            try { value = method.Invoke(instance, null); }
+            catch { return null; }
+            return value;
+        }
+        private static object GetFieldValue(FieldInfo field, object instance = null) {
+            object value;
+            try { value = field.GetValue(instance); }
+            catch { return null; }
+            return value;
         }
         private static bool IsDefault<T>(T value) {
             return Equals(value, default(T));
-        }
-        private static object GetFieldValue(FieldInfo field, object instance = null) {
-            if (field.IsStatic && instance != null) instance = null;
-            return field.GetValue(instance);
-        }
-        private static bool IsAtomicType(this Type t) {
-            return Const.AtomicTypes.ContainsKey(t.Name) && (t == Const.AtomicTypes[t.Name]);
         }
     }
 }
