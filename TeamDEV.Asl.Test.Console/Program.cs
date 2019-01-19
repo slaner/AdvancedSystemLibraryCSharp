@@ -21,12 +21,13 @@ namespace TeamDEV.Asl.Test.Console {
             PInvokeDebugger.CaptureFilters = PInvokeCaptureFilters.CaptureAll;
             PInvokeDebugger.TraceListener.Writer = System.Console.Out;
             PInvokeDebugger.PInvokeCaptured += OnPInvokeCaptured;
+            
+            Process p = Process.GetCurrentProcess();
 
-            var processEntries = NativeHelper.GetProcessEntries();
-            Process p = Process.GetProcessById(0);
             // string p = "Hello";
-            ProcessEnvironmentBlock peb = default(ProcessEnvironmentBlock);
-            ObjectInspector.Inspect(p, ' ', 2);
+            ProcessEnvironmentBlock peb;
+            NativeHelper.GetProcessPEB(p.Id, out peb);
+            ObjectInspector.Inspect(peb, ' ', 2);
             
             System.Console.ReadKey(true);
         }
