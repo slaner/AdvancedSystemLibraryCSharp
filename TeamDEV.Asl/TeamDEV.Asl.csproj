@@ -80,6 +80,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Const.cs" />
+    <Compile Include="Extensions\Collection.cs" />
+    <Compile Include="Extensions\Types.cs" />
     <Compile Include="IIdentifiable.cs" />
     <Compile Include="Extensions\Numeric.cs" />
     <Compile Include="Extensions\Pointer.cs" />
@@ -141,6 +143,7 @@
     <Compile Include="SystemManagements\Process\ProcessEntry.cs" />
     <Compile Include="Utilities\ObjectInspector.cs" />
     <Compile Include="Utilities\StringUtilities.cs" />
+    <Compile Include="Utilities\TraceBuffer.cs" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

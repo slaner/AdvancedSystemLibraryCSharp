@@ -77,7 +77,7 @@ namespace TeamDEV.Asl.PInvoke.Structures {
         public uint TlsExpansionCounter;
         public IntPtr TlsBitmap;
         [MarshalAs(UnmanagedType.ByValArray, SizeConst = 0x2)]
-        public uint[] TisBitmapBits;
+        public uint[] TlsBitmapBits;
 
         public IntPtr ReadOnlySharedMemoryBase;
         public IntPtr ReadOnlySharedMemoryHeap;
