@@ -4,6 +4,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
+using TeamDEV.Asl.PInvoke.Structures;
 using TeamDEV.Asl.Types;
 
 namespace TeamDEV.Asl.PInvoke.Modules {
